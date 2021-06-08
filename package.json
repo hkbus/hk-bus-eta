@@ -1,0 +1,30 @@
+{
+  "name": "bus-eta-hk",
+  "version": "1.0.0",
+  "description": "Query the ETA (Estimated Time of Arrival) of HK Bus",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hkbus/bus-eta-hk.git"
+  },
+  "keywords": [
+    "eta",
+    "hkbus",
+    "bus-eta",
+    "bus-schedule",
+    "hk-bus",
+    "bus"
+  ],
+  "author": "chunlaw",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/hkbus/bus-eta-hk/issues"
+  },
+  "homepage": "https://github.com/hkbus/bus-eta-hk#readme",
+  "dependencies": {
+    "moment": "^2.29.1"
+  }
+}
