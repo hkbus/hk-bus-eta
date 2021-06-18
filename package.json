@@ -1,5 +1,5 @@
 {
-  "name": "bus-eta-hk",
+  "name": "hk-bus-eta",
   "version": "1.0.0",
   "description": "Query the ETA (Estimated Time of Arrival) of HK Bus",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hkbus/bus-eta-hk.git"
+    "url": "git+https://github.com/hkbus/hk-bus-eta.git"
   },
   "keywords": [
     "eta",
@@ -19,11 +19,11 @@
     "bus"
   ],
   "author": "chunlaw",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "GNU GPLv3",
   "bugs": {
-    "url": "https://github.com/hkbus/bus-eta-hk/issues"
+    "url": "https://github.com/hkbus/hk-bus-eta/issues"
   },
-  "homepage": "https://github.com/hkbus/bus-eta-hk#readme",
+  "homepage": "https://github.com/hkbus/hk-bus-eta#readme",
   "dependencies": {
   }
 }
