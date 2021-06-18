@@ -1,5 +1,3 @@
-import moment from 'moment'
-
 const NlbApi = {
   co: 'nlb',
   fetchEtas: ({stopId, nlbId }) => (
@@ -37,7 +35,7 @@ const NlbApi = {
         throw new Error("Stop not exist")
     }).then(({data}) => data.map( e => ({
       route: e.route,
-      eta: e.eta ? Math.round(moment(e.eta).diff(moment()) / 60 / 1000) : e.eta,
+      eta: e.eta,
       dest: {
         en: e.dest
       },

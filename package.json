@@ -25,6 +25,5 @@
   },
   "homepage": "https://github.com/hkbus/bus-eta-hk#readme",
   "dependencies": {
-    "moment": "^2.29.1"
   }
 }

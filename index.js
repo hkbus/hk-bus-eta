@@ -33,5 +33,8 @@ const fetchEtas = async ( {route, routeStops, bound, seq, serviceType, co, nlbId
   })
 }
 
+const fetchEtaObj = () => fetch("https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json").then(r => r.json())
 
-export { fetchEtas }
+const fetchEtaObjMd5 = () => fetch('https://hkbus.github.io/hk-bus-crawling/routeFareList.md5').then(r => r.text())
+
+export { fetchEtas, fetchEtaObj, fetchEtaObjMd5 }

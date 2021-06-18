@@ -1,5 +1,3 @@
-import moment from 'moment'
-
 const KmbApi = {
   co: 'kmb',
   fetchEtas: ({stopId, route, seq, serviceType, bound}) => (
@@ -27,7 +25,7 @@ const KmbApi = {
       route: e.route,
       bound: e.dir,
       seq: e.seq,
-      eta: e.eta ? Math.round(moment(e.eta).diff(moment()) / 60 / 1000) : e.eta,
+      eta: e.eta,
       dest: {
         zh: e.dest_tc,
         en: e.dest_en

@@ -1,5 +1,3 @@
-import moment from 'moment'
-
 const NwfbApi = {
   co: 'nwfb',
   fetchEtas: ({stopId, route, bound }) => (
@@ -22,7 +20,7 @@ const NwfbApi = {
       route: e.route,
       bound: e.dir,
       seq: e.seq,
-      eta: e.eta ? Math.round(moment(e.eta).diff(moment()) / 60 / 1000) : e.eta,
+      eta: e.eta,
       dest: {
         en: e.dest.replace('/','／')
       },
