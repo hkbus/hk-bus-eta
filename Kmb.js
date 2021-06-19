@@ -1,4 +1,4 @@
-const KmbApi = {
+module.exports = {
   co: 'kmb',
   fetchEtas: ({stopId, route, seq, serviceType, bound}) => (
     fetch(
@@ -39,5 +39,3 @@ const KmbApi = {
     })))
   )
 }
-
-export default KmbApi

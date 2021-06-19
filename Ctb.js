@@ -1,4 +1,4 @@
-const CtbApi = {
+module.exports = {
   co: 'ctb',
   fetchEtas: ({stopId, route, bound }) => (
     fetch(`https://rt.data.gov.hk//v1/transport/citybus-nwfb/eta/CTB/${stopId}/${route}`, {cache: 'no-store'}).then(
@@ -32,5 +32,3 @@ const CtbApi = {
     })))
   )
 }
-
-export default CtbApi

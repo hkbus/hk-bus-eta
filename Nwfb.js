@@ -1,4 +1,4 @@
-const NwfbApi = {
+module.exports = {
   co: 'nwfb',
   fetchEtas: ({stopId, route, bound }) => (
     fetch(`https://rt.data.gov.hk//v1/transport/citybus-nwfb/eta/NWFB/${stopId}/${route}`, {cache: 'no-store'}).then(
@@ -32,5 +32,3 @@ const NwfbApi = {
     })))
   )
 }
-
-export default NwfbApi

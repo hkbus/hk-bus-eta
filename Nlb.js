@@ -1,4 +1,4 @@
-const NlbApi = {
+module.exports = {
   co: 'nlb',
   fetchEtas: ({stopId, nlbId }) => (
     fetch(`https://rt.data.gov.hk/v1/transport/nlb/stop.php?action=estimatedArrivals`, {
@@ -47,5 +47,3 @@ const NlbApi = {
     .catch(() => ([]))
   )
 }
-
-export default NlbApi
