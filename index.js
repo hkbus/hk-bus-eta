@@ -5,25 +5,25 @@ const NlbApi = require('./Nlb')
 
 module.exports = {
   // seq is 0-based here
-  fetchEtas: async ( {route, routeStops, bound, seq, serviceType, co, nlbId }) => {
+  fetchEtas: async ( {route, stops, bound, seq, serviceType, co, nlbId }) => {
     let _etas = []
     for ( const company_id of co ) {
-    if (company_id === 'kmb' && routeStops.kmb ){
+    if (company_id === 'kmb' && stops.kmb ){
       _etas = _etas.concat( await KmbApi.fetchEtas({
       route,
-      stopId: routeStops.kmb[seq], 
-      seq: (seq + 1 === routeStops.kmb.length ? 1000 : seq), 
+      stopId: stops.kmb[seq], 
+      seq: (seq + 1 === stops.kmb.length ? 1000 : seq), 
       serviceType, bound: bound[company_id]}) 
       )
     }
-    else if ( company_id === 'ctb' && routeStops.ctb ) {
-      _etas = _etas.concat( await CtbApi.fetchEtas({stopId: routeStops.ctb[seq], route, bound: bound[company_id] }))
+    else if ( company_id === 'ctb' && stops.ctb ) {
+      _etas = _etas.concat( await CtbApi.fetchEtas({stopId: stops.ctb[seq], route, bound: bound[company_id] }))
     }
-    else if ( company_id === 'nwfb' && routeStops.nwfb ) {
-      _etas = _etas.concat( await NwfbApi.fetchEtas({stopId: routeStops.nwfb[seq], route, bound: bound[company_id] }))
+    else if ( company_id === 'nwfb' && stops.nwfb ) {
+      _etas = _etas.concat( await NwfbApi.fetchEtas({stopId: stops.nwfb[seq], route, bound: bound[company_id] }))
     }
-    else if ( company_id === 'nlb' && routeStops.nlb ) {
-      _etas = _etas.concat( await NlbApi.fetchEtas({stopId: routeStops.nlb[seq], nlbId}) )
+    else if ( company_id === 'nlb' && stops.nlb ) {
+      _etas = _etas.concat( await NlbApi.fetchEtas({stopId: stops.nlb[seq], nlbId}) )
     }
     }
 
