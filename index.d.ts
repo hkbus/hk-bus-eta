@@ -7,6 +7,12 @@ export type Terminal = {
 
 export type FreqId = "31" | "287" | "415" | "63" | "319" | "447" | "416" | "480" | "266" | "271" | "272" | "288" | "320" | "448" | "511"
 
+export type Freq = {
+  [key in FreqId]: {
+    [startTime: string]: [string, string] | null
+  }
+}
+
 export type RouteListEntry = {
   readonly route: string,
   readonly co: Company[],
@@ -14,11 +20,7 @@ export type RouteListEntry = {
   readonly dest: Terminal,
   readonly fares: string[] | null,
   readonly faresHoliday: string[] | null,
-  readonly freq: {
-    [key in FreqId]: {
-      [startTime: string]: string[]
-    }
-  },
+  readonly freq: Freq | null,
   readonly seq: number,
   readonly serviceType: string,
   readonly stops: {
@@ -52,6 +54,7 @@ export type StopList = Record<string, StopListEntry>
 export type StopMap = Record<string, StopTuple[]>
 
 export type BusDb = {
+  holidays: string[],
   routeList: RouteList,
   stopList: StopList,
   stopMap: StopMap
