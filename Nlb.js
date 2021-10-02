@@ -1,3 +1,5 @@
+const utils = require('./utils')
+
 module.exports = {
   co: 'nlb',
   fetchEtas: ({stopId, nlbId }) => (
@@ -11,7 +13,7 @@ module.exports = {
         "Content-Type": "text/plain"
       },
       method: "POST",
-      cache: 'no-store'
+      cache: utils.isSafari ? 'default' : 'no-store'
     }).then(
       response => response.json()
     ).then(({estimatedArrivals}) => {
@@ -27,8 +29,9 @@ module.exports = {
     })
   ),
   fetchStopEtas: ( stopId ) => (
-    fetch(`https://rt.data.gov.hk/v1/transport/batch/stop-eta/NLB/${stopId}`, { cache: "no-store" })
-    .then( response => {
+    fetch(`https://rt.data.gov.hk/v1/transport/batch/stop-eta/NLB/${stopId}`, { 
+      cache: utils.isSafari ? 'default' : 'no-store'
+    }).then( response => {
         if (response.ok)
           return response.json()
         // special handle for NLB API
