@@ -12,7 +12,7 @@ module.exports = {
       _etas = _etas.concat( await KmbApi.fetchEtas({
       route,
       stopId: stops.kmb[seq], 
-      seq: (seq + 1 === stops.kmb.length ? 1000 : seq), 
+      seq,
       serviceType, bound: bound[company_id]}) 
       )
     }
