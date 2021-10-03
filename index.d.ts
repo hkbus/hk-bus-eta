@@ -21,6 +21,7 @@ export type RouteListEntry = {
   readonly fares: string[] | null,
   readonly faresHoliday: string[] | null,
   readonly freq: Freq | null,
+  readonly jt: string | null,
   readonly seq: number,
   readonly serviceType: string,
   readonly stops: {
