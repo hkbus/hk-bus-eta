@@ -1,5 +1,3 @@
-const utils = require('./utils')
-
 module.exports = {
   co: 'nlb',
   fetchEtas: ({stopId, nlbId }) => (
