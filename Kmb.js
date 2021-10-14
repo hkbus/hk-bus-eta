@@ -1,11 +1,9 @@
-const utils = require('./utils')
-
 module.exports = {
   co: 'kmb',
   fetchEtas: ({stopId, route, seq, serviceType, bound}) => (
     fetch(
       `https://data.etabus.gov.hk/v1/transport/kmb/eta/${stopId}/${route}/${serviceType}`,
-      { cache: utils.isSafari ? 'default' : 'no-store' }
+      { cache: "reload" }
     ).then( response => response.json() )
     .then(({data}) => data.filter(e => 
       e.dir === bound 
@@ -22,7 +20,7 @@ module.exports = {
   ),
   fetchStopEtas: ( stopId ) => (
     fetch(`https://data.etabus.gov.hk/v1/transport/kmb/stop-eta/${stopId}`, { 
-      cache: utils.isSafari ? 'default' : 'no-store'
+      cache: "reload"
     })
     .then(response => response.json())
     .then(({data}) => data.map( e => ({

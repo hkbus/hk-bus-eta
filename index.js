@@ -2,29 +2,29 @@ const KmbApi = require('./Kmb')
 const NwfbApi = require('./Nwfb')
 const CtbApi = require('./Ctb')
 const NlbApi = require('./Nlb')
+const LrtfeederApi = require('./Lrtfeeder')
 
 module.exports = {
   // seq is 0-based here
-  fetchEtas: async ( {route, stops, bound, seq, serviceType, co, nlbId }) => {
+  fetchEtas: async ( {route, stops, bound, seq, serviceType, co, nlbId, language }) => {
     let _etas = []
     for ( const company_id of co ) {
-    if (company_id === 'kmb' && stops.kmb ){
-      _etas = _etas.concat( await KmbApi.fetchEtas({
-      route,
-      stopId: stops.kmb[seq], 
-      seq,
-      serviceType, bound: bound[company_id]}) 
-      )
-    }
-    else if ( company_id === 'ctb' && stops.ctb ) {
-      _etas = _etas.concat( await CtbApi.fetchEtas({stopId: stops.ctb[seq], route, bound: bound[company_id] }))
-    }
-    else if ( company_id === 'nwfb' && stops.nwfb ) {
-      _etas = _etas.concat( await NwfbApi.fetchEtas({stopId: stops.nwfb[seq], route, bound: bound[company_id] }))
-    }
-    else if ( company_id === 'nlb' && stops.nlb ) {
-      _etas = _etas.concat( await NlbApi.fetchEtas({stopId: stops.nlb[seq], nlbId}) )
-    }
+      if (company_id === 'kmb' && stops.kmb ){
+        _etas = _etas.concat( await KmbApi.fetchEtas({
+        route,
+        stopId: stops.kmb[seq], 
+        seq,
+        serviceType, bound: bound[company_id]}) 
+        )
+      } else if ( company_id === 'ctb' && stops.ctb ) {
+        _etas = _etas.concat( await CtbApi.fetchEtas({stopId: stops.ctb[seq], route, bound: bound[company_id] }))
+      } else if ( company_id === 'nwfb' && stops.nwfb ) {
+        _etas = _etas.concat( await NwfbApi.fetchEtas({stopId: stops.nwfb[seq], route, bound: bound[company_id] }))
+      } else if ( company_id === 'nlb' && stops.nlb ) {
+        _etas = _etas.concat( await NlbApi.fetchEtas({stopId: stops.nlb[seq], nlbId}) )
+      } else if ( company_id === 'lrtfeeder' && stops.lrtfeeder ) {
+        _etas = _etas.concat( await LrtfeederApi.fetchEtas({stopId: stops.lrtfeeder[seq], route, language}))
+      }
     }
 
     return _etas.sort((a,b) => { 

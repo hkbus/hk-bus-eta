@@ -30,7 +30,7 @@ module.exports = {
   ),
   fetchStopEtas: ( stopId ) => (
     fetch(`https://rt.data.gov.hk/v1/transport/batch/stop-eta/NLB/${stopId}`, { 
-      cache: utils.isSafari ? 'default' : 'no-store'
+      cache: "reload"
     }).then( response => {
         if (response.ok)
           return response.json()

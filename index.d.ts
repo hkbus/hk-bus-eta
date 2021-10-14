@@ -1,4 +1,4 @@
-export type Company = "kmb" | "nlb" | "ctb" |  "nwfb"
+export type Company = "kmb" | "nlb" | "ctb" |  "nwfb" | 'lrtfeeder'
 
 export type Terminal = {
   en: string,
@@ -70,7 +70,7 @@ export type Eta = {
   co: Company
 }
 
-export declare function fetchEtas(route: Route): Promise<Eta[]>
+export declare function fetchEtas(route: any): Promise<Eta[]>
 
 export declare function fetchEtaObj(): Promise<BusDb>
 
