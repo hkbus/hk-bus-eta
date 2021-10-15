@@ -20,7 +20,7 @@ module.exports = {
         return [
           ...etas,
           {
-            eta: etaDate.toISOString(),
+            eta: new Date(etaDate.toString().split('GMT')[0]+' UTC').toISOString(),
             remark: {
               [language]: bus.busRemark
             },
