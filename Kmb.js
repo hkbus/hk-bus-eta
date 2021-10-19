@@ -1,10 +1,11 @@
+const utils = require('./utils');
+
 module.exports = {
   co: 'kmb',
   fetchEtas: ({stopId, route, seq, serviceType, bound}) => (
-    fetch(
-      `https://data.etabus.gov.hk/v1/transport/kmb/eta/${stopId}/${route}/${serviceType}`,
-      { cache: "reload" }
-    ).then( response => response.json() )
+    fetch(`https://data.etabus.gov.hk/v1/transport/kmb/eta/${stopId}/${route}/${serviceType}`,{ 
+      cache: utils.isSafari ? 'default' : 'no-store'
+    }).then( response => response.json() )
     .then(({data}) => data.filter(e => 
       e.dir === bound 
       && e.seq === seq + 1 // api return 1-based seq
@@ -20,7 +21,7 @@ module.exports = {
   ),
   fetchStopEtas: ( stopId ) => (
     fetch(`https://data.etabus.gov.hk/v1/transport/kmb/stop-eta/${stopId}`, { 
-      cache: "reload"
+      cache: utils.isSafari ? 'default' : 'no-store'
     })
     .then(response => response.json())
     .then(({data}) => data.map( e => ({

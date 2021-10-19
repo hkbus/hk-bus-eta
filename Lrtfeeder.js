@@ -1,9 +1,11 @@
+const utils = require('./utils');
+
 module.exports = {
   co: 'lrtfeeder',
   fetchEtas: ({stopId, route, language}) => (
     fetch(`https://rt.data.gov.hk/v1/transport/mtr/bus/getSchedule`, {
       method: "POST",
-      cache: "reload",
+      cache: utils.isSafari ? 'default' : 'no-store',
       headers: {
         'Content-Type': 'application/json'
       },

@@ -1,8 +1,10 @@
+const utils = require('./utils');
+
 module.exports = {
   co: 'ctb',
   fetchEtas: ({stopId, route, bound }) => (
     fetch(`https://rt.data.gov.hk//v1/transport/citybus-nwfb/eta/CTB/${stopId}/${route}`, {
-      cache: "reload"
+      cache: utils.isSafari ? 'default' : 'no-store'
     }).then(
       response => response.json()
     ).then(({data}) => data.filter(eta => eta.eta && eta.dir === bound).map(e => ({
@@ -17,7 +19,7 @@ module.exports = {
   ),
   fetchStopEtas: ( stopId ) => (
     fetch(`https://rt.data.gov.hk/v1/transport/batch/stop-eta/CTB/${stopId}`, { 
-      cache: "reload"
+      cache: utils.isSafari ? 'default' : 'no-store'
     }).then(
       response => response.json()
     ).then(({data}) => data.map( e => ({
