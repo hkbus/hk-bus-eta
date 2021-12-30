@@ -24,7 +24,7 @@ module.exports = {
             eta: `${etaDate.getFullYear()}-${`0${etaDate.getMonth() + 1}`.slice(-2)}-${`0${etaDate.getDate()}`.slice(-2)}`
                 +`T${`0${etaDate.getHours()}`.slice(-2)}:${`0${etaDate.getMinutes()}`.slice(-2)}:${`0${etaDate.getSeconds()}`.slice(-2)}+08:00`,
             remark: {
-              [language]: bus.busRemark
+              [language]: bus.busRemark || ( bus.isScheduled === "1" ? ( language === "en" ? "Scheduled" : "預定班次" ) : "" )
             },
             co: 'lrtfeeder'
           }
