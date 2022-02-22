@@ -18,8 +18,9 @@ module.exports = {
       response => response.json()
     ).then(({estimatedArrivals}) => {
       if ( !estimatedArrivals ) return []
+      
       return estimatedArrivals.filter(eta => eta.estimatedArrivalTime).map(e => ({
-        eta: e.estimatedArrivalTime,
+        eta: e.estimatedArrivalTime.replace(' ', 'T') + '.000+08:00',
         remark: {
           zh: '',
           en: ''
