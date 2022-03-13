@@ -1,4 +1,4 @@
-export type Company = "kmb" | "nlb" | "ctb" |  "nwfb" | 'lrtfeeder'
+export type Company = "kmb" | "nlb" | "ctb" |  "nwfb" | 'lrtfeeder' | 'gmb'
 
 export type Terminal = {
   en: string,
@@ -30,6 +30,7 @@ export type RouteListEntry = {
   readonly bound: {
     [co in Company]: "O" | "I"
   },
+  readonly gtfsId: string,
   readonly nlbId: string
 }
 

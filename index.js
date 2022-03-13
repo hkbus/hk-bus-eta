@@ -3,10 +3,11 @@ const NwfbApi = require('./Nwfb')
 const CtbApi = require('./Ctb')
 const NlbApi = require('./Nlb')
 const LrtfeederApi = require('./Lrtfeeder')
+const GmbApi = require('./Gmb')
 
 module.exports = {
   // seq is 0-based here
-  fetchEtas: async ( {route, stops, bound, seq, serviceType, co, nlbId, language }) => {
+  fetchEtas: async ( {route, stops, bound, seq, serviceType, co, nlbId, gtfsId, language }) => {
     let _etas = []
     for ( const company_id of co ) {
       if (company_id === 'kmb' && stops.kmb ){
@@ -24,6 +25,8 @@ module.exports = {
         _etas = _etas.concat( await NlbApi.fetchEtas({stopId: stops.nlb[seq], nlbId}) )
       } else if ( company_id === 'lrtfeeder' && stops.lrtfeeder ) {
         _etas = _etas.concat( await LrtfeederApi.fetchEtas({stopId: stops.lrtfeeder[seq], route, language}))
+      } else if ( company_id === 'gmb' && stops.gmb ) {
+        _etas = _etas.concat( await GmbApi.fetchEtas({stopId: stops.gmb[seq], gtfsId, bound: bound[company_id]}) )
       }
     }
 
