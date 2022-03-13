@@ -26,7 +26,7 @@ module.exports = {
       } else if ( company_id === 'lrtfeeder' && stops.lrtfeeder ) {
         _etas = _etas.concat( await LrtfeederApi.fetchEtas({stopId: stops.lrtfeeder[seq], route, language}))
       } else if ( company_id === 'gmb' && stops.gmb ) {
-        _etas = _etas.concat( await GmbApi.fetchEtas({stopId: stops.gmb[seq], gtfsId, bound: bound[company_id]}) )
+        _etas = _etas.concat( await GmbApi.fetchEtas({stopId: stops.gmb[seq], gtfsId, seq, bound: bound[company_id]}) )
       }
     }
 
