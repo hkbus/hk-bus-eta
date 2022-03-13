@@ -21,10 +21,6 @@ module.exports = {
           }))
         ], [] )
     ))
-    .then(ret => {
-      console.log(ret)
-      return ret
-    })
   ),
   fetchStopEtas: ( stopId ) => []
 }
