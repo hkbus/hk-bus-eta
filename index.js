@@ -4,10 +4,11 @@ const CtbApi = require('./Ctb')
 const NlbApi = require('./Nlb')
 const LrtfeederApi = require('./Lrtfeeder')
 const GmbApi = require('./Gmb')
+const LightRailApi = require('./LightRail')
 
 module.exports = {
   // seq is 0-based here
-  fetchEtas: async ( {route, stops, bound, seq, serviceType, co, nlbId, gtfsId, language }) => {
+  fetchEtas: async ( {route, stops, bound, dest, seq, serviceType, co, nlbId, gtfsId, language }) => {
     let _etas = []
     for ( const company_id of co ) {
       if (company_id === 'kmb' && stops.kmb ){
@@ -27,6 +28,8 @@ module.exports = {
         _etas = _etas.concat( await LrtfeederApi.fetchEtas({stopId: stops.lrtfeeder[seq], route, language}))
       } else if ( company_id === 'gmb' && stops.gmb ) {
         _etas = _etas.concat( await GmbApi.fetchEtas({stopId: stops.gmb[seq], gtfsId, seq, bound: bound[company_id]}) )
+      } else if ( company_id === 'lightRail' && stops.lightRail ) {
+        _etas = _etas.concat( await LightRailApi.fetchEtas({ stopId: stops.lightRail[seq], route, dest }) )
       }
     }
 
