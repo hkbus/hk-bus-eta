@@ -18,7 +18,7 @@ module.exports = {
               return {
                 eta: etaDate,
                 remark: {
-                  zh: `${platform_id}號平台`,
+                  zh: `${platform_id}號月台`,
                   en: `Platform ${platform_id}`
                 },
                 co: 'lightRail'

@@ -1,4 +1,4 @@
-export type Company = "kmb" | "nlb" | "ctb" |  "nwfb" | 'lrtfeeder' | 'gmb' | 'lightRail'
+export type Company = "kmb" | "nlb" | "ctb" |  "nwfb" | 'lrtfeeder' | 'gmb' | 'lightRail' | 'mtr'
 
 export type Terminal = {
   en: string,

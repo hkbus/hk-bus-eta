@@ -5,6 +5,7 @@ const NlbApi = require('./Nlb')
 const LrtfeederApi = require('./Lrtfeeder')
 const GmbApi = require('./Gmb')
 const LightRailApi = require('./LightRail')
+const MtrApi = require('./Mtr')
 
 module.exports = {
   // seq is 0-based here
@@ -30,6 +31,8 @@ module.exports = {
         _etas = _etas.concat( await GmbApi.fetchEtas({stopId: stops.gmb[seq], gtfsId, seq, bound: bound[company_id]}) )
       } else if ( company_id === 'lightRail' && stops.lightRail ) {
         _etas = _etas.concat( await LightRailApi.fetchEtas({ stopId: stops.lightRail[seq], route, dest }) )
+      } else if ( company_id === 'mtr' && stops.mtr ) {
+        _etas = _etas.concat( await MtrApi.fetchEtas({ stopId: stops.mtr[seq], route, bound: bound.mtr }) )
       }
     }
 
