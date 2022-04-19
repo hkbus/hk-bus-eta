@@ -14,9 +14,10 @@ module.exports = {
           ...route_list
             .filter(({route_no, dest_ch, stop}) => route === route_no && dest_ch === dest.zh && stop === 0)
             .map( ({time_en}) => {
-              const etaDate = new Date(Date.now() + parseInt(time_en, 10) * 60 * 1000).toISOString();
+              const etaDate = new Date(Date.now() + parseInt(time_en === '-' ? '0' : time_en, 10) * 60 * 1000 + 8 * 3600000);
               return {
-                eta: etaDate,
+                eta: `${etaDate.getUTCFullYear()}-${`0${etaDate.getUTCMonth() + 1}`.slice(-2)}-${`0${etaDate.getUTCDate()}`.slice(-2)}`
+                  +`T${`0${etaDate.getUTCHours()}`.slice(-2)}:${`0${etaDate.getMinutes()}`.slice(-2)}:${`0${etaDate.getSeconds()}`.slice(-2)}+08:00`,
                 remark: {
                   zh: `${platform_id}號月台`,
                   en: `Platform ${platform_id}`
@@ -26,6 +27,10 @@ module.exports = {
             }, [])
         ], [])
     ))
+    .catch(e => {
+      console.error(e);
+      return [];
+    })
   ),
   fetchStopEtas: ( stopId ) => []
 }
