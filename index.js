@@ -20,9 +20,9 @@ module.exports = {
         serviceType, bound: bound[company_id]}) 
         )
       } else if ( company_id === 'ctb' && stops.ctb ) {
-        _etas = _etas.concat( await CtbApi.fetchEtas({stopId: stops.ctb[seq], route, bound: bound[company_id] }))
+        _etas = _etas.concat( await CtbApi.fetchEtas({stopId: stops.ctb[seq], route, bound: bound[company_id], seq }))
       } else if ( company_id === 'nwfb' && stops.nwfb ) {
-        _etas = _etas.concat( await NwfbApi.fetchEtas({stopId: stops.nwfb[seq], route, bound: bound[company_id] }))
+        _etas = _etas.concat( await NwfbApi.fetchEtas({stopId: stops.nwfb[seq], route, bound: bound[company_id], seq }))
       } else if ( company_id === 'nlb' && stops.nlb ) {
         _etas = _etas.concat( await NlbApi.fetchEtas({stopId: stops.nlb[seq], nlbId}) )
       } else if ( company_id === 'lrtfeeder' && stops.lrtfeeder ) {
