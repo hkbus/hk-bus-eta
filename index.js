@@ -14,11 +14,11 @@ module.exports = {
     for ( const company_id of co ) {
       if (company_id === 'kmb' && stops.kmb ){
         _etas = _etas.concat( await KmbApi.fetchEtas({
-        route,
-        stopId: stops.kmb[seq], 
-        seq,
-        serviceType, bound: bound[company_id]}) 
-        )
+          route,
+          stopId: stops.kmb[seq], 
+          seq,
+          serviceType, bound: bound[company_id]
+        }))
       } else if ( company_id === 'ctb' && stops.ctb ) {
         _etas = _etas.concat( await CtbApi.fetchEtas({stopId: stops.ctb[seq], route, bound: bound[company_id], seq }))
       } else if ( company_id === 'nwfb' && stops.nwfb ) {

@@ -5,11 +5,15 @@ module.exports = {
   fetchEtas: ({stopId, route, seq, serviceType, bound}) => (
     fetch(`https://data.etabus.gov.hk/v1/transport/kmb/eta/${stopId}/${route}/${serviceType}`,{ 
       cache: utils.isSafari ? 'default' : 'no-store'
-    }).then( response => response.json() )
-    .then(({data}) => data.filter(e => 
-      e.dir === bound 
-      && e.seq === seq + 1 // api return 1-based seq
-    ).map(e => ({
+    })
+    .then( response => response.json() )
+    .then(({data}) => (
+      data.filter(e => 
+        e.eta !== null
+        && e.dir === bound 
+        && e.seq === seq + 1 // api return 1-based seq
+      )
+      .map(e => ({
         eta: e.eta,
         remark: {
           zh: e.rmk_tc,
@@ -17,7 +21,7 @@ module.exports = {
         },
         co: 'kmb'
       }))
-    )
+    ))
   ),
   fetchStopEtas: ( stopId ) => (
     fetch(`https://data.etabus.gov.hk/v1/transport/kmb/stop-eta/${stopId}`, { 
