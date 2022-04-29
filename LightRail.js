@@ -12,7 +12,11 @@ module.exports = {
         .reduce((acc, {route_list, platform_id}) => [
           ...acc,
           ...route_list
-            .filter(({route_no, dest_ch, stop}) => route === route_no && dest_ch.startsWith(dest.zh) && stop === 0)
+            .filter(({route_no, dest_ch, dest_en, stop}) => (
+              route === route_no 
+              && ( dest_ch === dest.zh || dest_en.includes('Circular') ) 
+              && stop === 0
+            ))
             .map( ({time_en}) => {
               let waitTime = 0
               switch ( time_en.toLowerCase() ) {
