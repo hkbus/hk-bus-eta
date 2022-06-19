@@ -28,7 +28,7 @@ export type RouteListEntry = {
     [co in Company]: string[]
   },
   readonly bound: {
-    [co in Company]: "O" | "I"
+    [co in Company]: "O" | "I" | "OI" | "IO"
   },
   readonly gtfsId: string,
   readonly nlbId: string

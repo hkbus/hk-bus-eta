@@ -9,7 +9,7 @@ module.exports = {
       response => response.json()
     ).then(({data}) => (
       data
-        .filter(eta => eta.eta && eta.dir === bound)
+        .filter(eta => eta.eta && bound.includes(eta.dir))
         // filter the eta by the stop sequence information 
         // as the route data may not 100% match
         // use the nearest seq
