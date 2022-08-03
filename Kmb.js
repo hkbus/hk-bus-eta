@@ -11,8 +11,9 @@ module.exports = {
       data.filter(e => 
         e.eta !== null
         && e.dir === bound 
-        && e.seq === seq + 1 // api return 1-based seq
       )
+      .sort((a,b) => Math.abs(a.seq - seq) < Math.abs(b.seq - seq) ? -1 : 1 )
+      .filter((eta, idx, self) => eta.seq === self[0].seq)
       .map(e => ({
         eta: e.eta,
         remark: {
