@@ -1,6 +1,6 @@
 {
   "name": "hk-bus-eta",
-  "version": "1.8.2",
+  "version": "1.8.3",
   "description": "Query the ETA (Estimated Time of Arrival) of HK Bus",
   "main": "index.js",
   "scripts": {
