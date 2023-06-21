@@ -3,7 +3,7 @@ const utils = require('./utils');
 module.exports = {
   co: 'nwfb',
   fetchEtas: ({stopId, route, bound, seq }) => (
-    fetch(`https://rt.data.gov.hk//v1/transport/citybus-nwfb/eta/NWFB/${stopId}/${route}`, {
+    fetch(`https://rt.data.gov.hk//v2/transport/citybus/eta/NWFB/${stopId}/${route}`, {
       cache: utils.isSafari ? 'default' : 'no-store'
     }).then(
       response => response.json()
