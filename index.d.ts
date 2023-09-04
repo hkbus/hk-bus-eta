@@ -71,7 +71,7 @@ export type Eta = {
   co: Company
 }
 
-export declare function fetchEtas(route: any): Promise<Eta[]>
+export declare function fetchEtas(route: RouteListEntry & {seq: number, language: "zh" | "en"}): Promise<Eta[]>
 
 export declare function fetchEtaObj(): Promise<BusDb>
 
