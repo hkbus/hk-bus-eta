@@ -1,5 +1,4 @@
 const KmbApi = require('./Kmb')
-const NwfbApi = require('./Nwfb')
 const CtbApi = require('./Ctb')
 const NlbApi = require('./Nlb')
 const LrtfeederApi = require('./Lrtfeeder')
@@ -22,8 +21,6 @@ module.exports = {
           }))
         } else if ( company_id === 'ctb' && stops.ctb ) {
           _etas = _etas.concat( await CtbApi.fetchEtas({stopId: stops.ctb[seq], route, bound: bound[company_id], seq }))
-        } else if ( company_id === 'nwfb' && stops.nwfb ) {
-          _etas = _etas.concat( await NwfbApi.fetchEtas({stopId: stops.nwfb[seq], route, bound: bound[company_id], seq }))
         } else if ( company_id === 'nlb' && stops.nlb ) {
           _etas = _etas.concat( await NlbApi.fetchEtas({stopId: stops.nlb[seq], nlbId}) )
         } else if ( company_id === 'lrtfeeder' && stops.lrtfeeder ) {
