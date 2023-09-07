@@ -1,0 +1,16 @@
+{
+  "short_name": "Clicking HK",
+  "name": "Clicking HK",
+  "icons": [
+    {
+      "src": "vite.svg",
+      "sizes": "512x512 256x256 192x192 128x128 64x64 32x32 24x24 16x16",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "start_url": ".",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "display": "standalone"
+}

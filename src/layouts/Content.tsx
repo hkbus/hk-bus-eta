@@ -1,0 +1,235 @@
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Button,
+  Link,
+  SxProps,
+  Theme,
+  Typography,
+} from "@mui/material";
+import { useContext } from "react";
+import AppContext from "../AppContext";
+import { JsonView, darkStyles } from "react-json-view-lite";
+import "react-json-view-lite/dist/index.css";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import RoutePicker from "../components/RoutePicker";
+import StopPicker from "../components/StopPicker";
+import LanguagePicker from "../components/LanguagePicker";
+
+const Content = () => {
+  const {
+    db,
+    md5,
+    data,
+    routeId,
+    stopSeq,
+    language,
+    fetchEtaObj,
+    fetchEtaObjMd5,
+    fetchEtas,
+  } = useContext(AppContext);
+
+  const alwaysExpanded = true;
+
+  return (
+    <Box sx={rootSx}>
+      <Accordion expanded={alwaysExpanded}>
+        <AccordionSummary sx={accordionSummarySx}>
+          <Typography variant="h6">fetchEtaObj</Typography>
+          <Typography variant="body1">
+            <i>
+              fetch ETA database for routes and stop data of KMB, CTB, MTR, and
+              Minibus
+            </i>
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails sx={detailSx}>
+          <Box sx={{ flex: 1 }}>
+            <SyntaxHighlighter
+              language="tsx"
+              lineProps={{
+                style: { wordBreak: "break-all", whiteSpace: "pre-wrap" },
+              }}
+              wrapLines={true}
+            >
+              {fetchEtaObjCode}
+            </SyntaxHighlighter>
+            <Button
+              variant="contained"
+              sx={{ textTransform: "none" }}
+              onClick={fetchEtaObj}
+            >
+              Run
+            </Button>
+          </Box>
+          <Box sx={{ flex: 1, my: 1 }}>
+            <JsonView
+              // @ts-ignore
+              data={db ?? null}
+              shouldInitiallyExpand={(lv) => lv < 1}
+              style={{
+                ...darkStyles,
+                container: `${darkStyles.container} json-container`,
+              }}
+            />
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion expanded={alwaysExpanded}>
+        <AccordionSummary sx={accordionSummarySx}>
+          <Typography variant="h6">fetchEtas</Typography>
+          <Typography variant="body1">
+            <i>
+              fetch ETAs from{" "}
+              <Link href="https://data.gov.hk/" target="_blank">
+                data.gov.hk
+              </Link>
+            </i>
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails sx={detailSx}>
+          <Box
+            sx={{ flex: 1, display: "flex", flexDirection: "column", gap: 1 }}
+          >
+            {db === null && (
+              <Typography variant="body1">
+                Need to call <i>fetchEtaObj</i> first
+              </Typography>
+            )}
+            {db !== null && (
+              <>
+                <RoutePicker />
+                <StopPicker />
+                <LanguagePicker />
+                <SyntaxHighlighter
+                  language="tsx"
+                  lineProps={{
+                    style: { wordBreak: "break-all", whiteSpace: "pre-wrap" },
+                  }}
+                  wrapLines={true}
+                >
+                  {getFetchEtasCode(routeId, stopSeq, language)}
+                </SyntaxHighlighter>
+                <Box>
+                  <Button
+                    variant="contained"
+                    sx={{ textTransform: "none" }}
+                    onClick={() => fetchEtas(routeId, stopSeq, language)}
+                  >
+                    Run
+                  </Button>
+                </Box>
+              </>
+            )}
+          </Box>
+          <Box sx={{ flex: 1, my: 1 }}>
+            {db !== null && (
+              <JsonView
+                // @ts-ignore
+                data={data || null}
+                style={{
+                  ...darkStyles,
+                  container: `${darkStyles.container} json-container`,
+                }}
+              />
+            )}
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary sx={accordionSummarySx}>
+          <Typography variant="h6">fetchEtaObjMd5</Typography>
+          <Typography variant="body1">
+            <i>md5 string for BusObj verififcation</i>
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails sx={detailSx}>
+          <Box sx={{ flex: 1 }}>
+            <SyntaxHighlighter
+              language="tsx"
+              lineProps={{
+                style: { wordBreak: "break-all", whiteSpace: "pre-wrap" },
+              }}
+              wrapLines={true}
+            >
+              {fetchEtaObjMd5Code}
+            </SyntaxHighlighter>
+            <Button
+              variant="contained"
+              sx={{ textTransform: "none" }}
+              onClick={fetchEtaObjMd5}
+            >
+              Run
+            </Button>
+          </Box>
+          <Box sx={{ flex: 1, my: 1 }}>
+            <JsonView
+              // @ts-ignore
+              data={md5 || null}
+              shouldInitiallyExpand={(lv) => lv < 1}
+              style={{
+                ...darkStyles,
+                container: `${darkStyles.container} json-container`,
+              }}
+            />
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+    </Box>
+  );
+};
+
+export default Content;
+
+const rootSx: SxProps<Theme> = {
+  display: "flex",
+  flexDirection: "column",
+  width: "100%",
+  flex: 1,
+  overflow: "scroll",
+};
+
+const detailSx: SxProps<Theme> = {
+  display: "flex",
+  justifyContent: "space-between",
+  gap: 2,
+  alignItems: "flex-start",
+};
+
+const fetchEtaObjCode = `import { fetchEtaObj } from "hk-bus-eta";
+import type { BusDb } from "hk-bus-eta";
+
+fetchEtaObj().then((db: BusDb) => {
+  console.log(db)
+})`;
+
+const fetchEtaObjMd5Code = `import { fetchEtaObjMd5 } from "hk-bus-eta";
+
+fetchEtaObjMd5().then((md5: string) => {
+  console.log(md5)
+})`;
+
+const getFetchEtasCode = (routeId: string, seq: number, language: string) =>
+  `import { fetchEtas } from "hk-bus-eta";
+import tyep { Eta } from "hk-bus-eta";
+
+// busDb is the BusDb object fetched by fetchEtaObj
+
+fetchEtas({
+  ...busDb.routeList["${routeId}"],
+  seq: ${seq},
+  language: "${language}",
+}).then(etas => {
+  console.log(etas)
+})
+`;
+
+const accordionSummarySx: SxProps<Theme> = {
+  "& .MuiAccordionSummary-content": {
+    alignItems: "baseline",
+    gap: 2,
+    borderBottom: "#eee 1px solid",
+  },
+};
