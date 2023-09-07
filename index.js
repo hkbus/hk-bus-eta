@@ -44,6 +44,6 @@ module.exports = {
       return []
     }
   },
-  fetchEtaObj: () => fetch("https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json").then(r => r.json()),
-  fetchEtaObjMd5: () => fetch('https://hkbus.github.io/hk-bus-crawling/routeFareList.md5').then(r => r.text())
+  fetchBusDb: () => fetch("https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json").then(r => r.json()),
+  fetchBusDbMd5: () => fetch('https://hkbus.github.io/hk-bus-crawling/routeFareList.md5').then(r => r.text())
 }

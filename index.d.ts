@@ -73,6 +73,6 @@ export type Eta = {
 
 export declare function fetchEtas(route: RouteListEntry & {seq: number, language: "zh" | "en"}): Promise<Eta[]>
 
-export declare function fetchEtaObj(): Promise<BusDb>
+export declare function fetchBusDb(): Promise<BusDb>
 
-export declare function fetchEtaObjMd5(): Promise<string>
+export declare function fetchBusDbMd5(): Promise<string>
