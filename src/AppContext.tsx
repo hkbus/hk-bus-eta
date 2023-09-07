@@ -1,14 +1,14 @@
 import React, { ReactNode, useCallback, useState } from "react";
 import {
-  fetchEtaObj as _fetchEtaObj,
-  fetchEtaObjMd5 as _fetchEtaObjMd5,
+  fetchEtaDb as _fetchEtaDb,
+  fetchEtaDbMd5 as _fetchEtaDbMd5,
   fetchEtas as _fetchEtas,
-  BusDb,
+  EtaDb,
   Eta,
 } from "hk-bus-eta";
 
 interface AppContextState {
-  db: BusDb | null;
+  db: EtaDb | null;
   md5: string;
   data: Eta[] | null;
 
@@ -18,8 +18,8 @@ interface AppContextState {
 }
 
 interface AppContextValue extends AppContextState {
-  fetchEtaObj: () => void;
-  fetchEtaObjMd5: () => void;
+  fetchEtaDb: () => void;
+  fetchEtaDbMd5: () => void;
   fetchEtas: (routeId: string, stopSeq: number, language: "zh" | "en") => void;
   setRouteId: (routeId: string) => void;
   setStopSeq: (stopSeq: number) => void;
@@ -68,8 +68,8 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     }));
   }, []);
 
-  const fetchEtaObj = useCallback(() => {
-    _fetchEtaObj().then((db) => {
+  const fetchEtaDb = useCallback(() => {
+    _fetchEtaDb().then((db) => {
       setState((prev) => ({
         ...prev,
         db,
@@ -78,8 +78,8 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     });
   }, []);
 
-  const fetchEtaObjMd5 = useCallback(() => {
-    _fetchEtaObjMd5().then((md5) => {
+  const fetchEtaDbMd5 = useCallback(() => {
+    _fetchEtaDbMd5().then((md5) => {
       setState((prev) => ({
         ...prev,
         md5,
@@ -108,8 +108,8 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
     <AppContext.Provider
       value={{
         ...state,
-        fetchEtaObj,
-        fetchEtaObjMd5,
+        fetchEtaDb,
+        fetchEtaDbMd5,
         fetchEtas,
         setRouteId,
         setStopSeq,

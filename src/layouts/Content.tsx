@@ -26,8 +26,8 @@ const Content = () => {
     routeId,
     stopSeq,
     language,
-    fetchEtaObj,
-    fetchEtaObjMd5,
+    fetchEtaDb,
+    fetchEtaDbMd5,
     fetchEtas,
   } = useContext(AppContext);
 
@@ -37,7 +37,7 @@ const Content = () => {
     <Box sx={rootSx}>
       <Accordion expanded={alwaysExpanded}>
         <AccordionSummary sx={accordionSummarySx}>
-          <Typography variant="h6">fetchEtaObj</Typography>
+          <Typography variant="h6">fetchEtaDb</Typography>
           <Typography variant="body1">
             <i>
               fetch ETA database for routes and stop data of KMB, CTB, MTR, and
@@ -54,12 +54,12 @@ const Content = () => {
               }}
               wrapLines={true}
             >
-              {fetchEtaObjCode}
+              {fetchEtaDbCode}
             </SyntaxHighlighter>
             <Button
               variant="contained"
               sx={{ textTransform: "none" }}
-              onClick={fetchEtaObj}
+              onClick={fetchEtaDb}
             >
               Run
             </Button>
@@ -95,7 +95,7 @@ const Content = () => {
           >
             {db === null && (
               <Typography variant="body1">
-                Need to call <i>fetchEtaObj</i> first
+                Need to call <i>fetchEtaDb</i> first
               </Typography>
             )}
             {db !== null && (
@@ -140,7 +140,7 @@ const Content = () => {
       </Accordion>
       <Accordion>
         <AccordionSummary sx={accordionSummarySx}>
-          <Typography variant="h6">fetchEtaObjMd5</Typography>
+          <Typography variant="h6">fetchEtaDbMd5</Typography>
           <Typography variant="body1">
             <i>md5 string for BusObj verififcation</i>
           </Typography>
@@ -154,12 +154,12 @@ const Content = () => {
               }}
               wrapLines={true}
             >
-              {fetchEtaObjMd5Code}
+              {fetchEtaDbMd5Code}
             </SyntaxHighlighter>
             <Button
               variant="contained"
               sx={{ textTransform: "none" }}
-              onClick={fetchEtaObjMd5}
+              onClick={fetchEtaDbMd5}
             >
               Run
             </Button>
@@ -198,16 +198,16 @@ const detailSx: SxProps<Theme> = {
   alignItems: "flex-start",
 };
 
-const fetchEtaObjCode = `import { fetchEtaObj } from "hk-bus-eta";
+const fetchEtaDbCode = `import { fetchEtaDb } from "hk-bus-eta";
 import type { BusDb } from "hk-bus-eta";
 
-fetchEtaObj().then((db: BusDb) => {
+fetchEtaDb().then((db: BusDb) => {
   console.log(db)
 })`;
 
-const fetchEtaObjMd5Code = `import { fetchEtaObjMd5 } from "hk-bus-eta";
+const fetchEtaDbMd5Code = `import { fetchEtaDbMd5 } from "hk-bus-eta";
 
-fetchEtaObjMd5().then((md5: string) => {
+fetchEtaDbMd5().then((md5: string) => {
   console.log(md5)
 })`;
 
@@ -215,7 +215,7 @@ const getFetchEtasCode = (routeId: string, seq: number, language: string) =>
   `import { fetchEtas } from "hk-bus-eta";
 import tyep { Eta } from "hk-bus-eta";
 
-// busDb is the BusDb object fetched by fetchEtaObj
+// busDb is the BusDb object fetched by fetchEtaDb
 
 fetchEtas({
   ...busDb.routeList["${routeId}"],
