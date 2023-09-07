@@ -1,4 +1,4 @@
-export type Company = "kmb" | "nlb" | "ctb" |  "nwfb" | 'lrtfeeder' | 'gmb' | 'lightRail' | 'mtr'
+export type Company = "kmb" | "nlb" | "ctb" | 'lrtfeeder' | 'gmb' | 'lightRail' | 'mtr'
 
 export type Terminal = {
   en: string,
@@ -55,7 +55,7 @@ export type StopList = Record<string, StopListEntry>
 
 export type StopMap = Record<string, StopTuple[]>
 
-export type BusDb = {
+export type EtaDb = {
   holidays: string[],
   routeList: RouteList,
   stopList: StopList,
@@ -73,6 +73,6 @@ export type Eta = {
 
 export declare function fetchEtas(route: RouteListEntry & {seq: number, language: "zh" | "en"}): Promise<Eta[]>
 
-export declare function fetchBusDb(): Promise<BusDb>
+export declare function fetchEtaDb(): Promise<EtaDb>
 
-export declare function fetchBusDbMd5(): Promise<string>
+export declare function fetchEtaDbMd5(): Promise<string>
