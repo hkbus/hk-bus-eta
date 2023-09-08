@@ -7,7 +7,7 @@ const Footer = () => {
     <Box sx={rootSx}>
       <IconButton
         onClick={() => {
-          window.open("https://github.com/chunlaw/hk-bus-eta", "_blank");
+          window.open("https://github.com/hkbus/hk-bus-eta", "_blank");
         }}
         size="small"
       >
