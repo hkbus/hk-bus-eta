@@ -1,23 +1,29 @@
-const utils = require('./utils');
+import type { Eta, RouteListEntry } from "./type";
+import { isSafari } from "./utils";
 
-module.exports = {
-  co: 'lightRail',
-  fetchEtas: ({stopId, route, dest }) => (
+interface fetchEtasProps {
+  route: RouteListEntry['route'], 
+  dest: RouteListEntry['dest'],
+  stopId: string, 
+}
+
+export default function fetchEtas ({stopId, route, dest }: fetchEtasProps): Promise<Eta[]> {
+  return (
     fetch(`https://rt.data.gov.hk/v1/transport/mtr/lrt/getSchedule?station_id=${stopId.slice(2)}`, {
-      cache: utils.isSafari ? 'default' : 'no-store',
+      cache: isSafari ? 'default' : 'no-store',
 
     }).then( response => response.json() )
     .then(({platform_list}) => (
       platform_list
-        .reduce((acc, {route_list, platform_id}) => [
+        .reduce((acc: Eta[], {route_list, platform_id}: any) => [
           ...acc,
           ...route_list
-            .filter(({route_no, dest_ch, dest_en, stop}) => (
+            .filter(({route_no, dest_ch, dest_en, stop}: any) => (
               route === route_no 
               && ( dest_ch === dest.zh || dest_en.includes('Circular') ) 
               && stop === 0
             ))
-            .map( ({time_en}) => {
+            .map( ({time_en}: any) => {
               let waitTime = 0
               switch ( time_en.toLowerCase() ) {
                 case 'arriving':
@@ -46,6 +52,5 @@ module.exports = {
       console.error(e);
       return [];
     })
-  ),
-  fetchStopEtas: ( stopId ) => []
+  );
 }

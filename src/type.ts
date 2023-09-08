@@ -70,9 +70,3 @@ export type Eta = {
   },
   co: Company
 }
-
-export declare function fetchEtas(route: RouteListEntry & {seq: number, language: "zh" | "en"}): Promise<Eta[]>
-
-export declare function fetchEtaDb(): Promise<EtaDb>
-
-export declare function fetchEtaDbMd5(): Promise<string>

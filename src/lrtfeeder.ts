@@ -1,11 +1,17 @@
-const utils = require('./utils');
+import type { Eta, RouteListEntry } from "./type";
+import { isSafari } from "./utils";
 
-module.exports = {
-  co: 'lrtfeeder',
-  fetchEtas: ({stopId, route, language}) => (
+interface fetchEtasProps {
+  route: RouteListEntry['route'], 
+  language: "zh" | "en",
+  stopId: string, 
+}
+
+export default function fetchEtas ({stopId, route, language}: fetchEtasProps): Promise<Eta[]> {
+  return (
     fetch(`https://rt.data.gov.hk/v1/transport/mtr/bus/getSchedule`, {
       method: "POST",
-      cache: utils.isSafari ? 'default' : 'no-store',
+      cache: isSafari ? 'default' : 'no-store',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -15,8 +21,8 @@ module.exports = {
       })
     }).then( response => response.json() )
     .then(({busStop}) => 
-      busStop.filter(({busStopId}) => busStopId === stopId)
-      .reduce((ret, {bus: buses}) => ([...ret, ...buses.reduce( (etas, bus) => {
+      busStop.filter(({busStopId}: any) => busStopId === stopId)
+      .reduce((ret: any, {bus: buses}: any) => ([...ret, ...buses.reduce( (etas: Eta[], bus: any) => {
         // hackily use +8 hours and use UTC hour to resolve timezone issue
         const etaDate = new Date(Date.now() + parseInt(bus.arrivalTimeInSecond === "108000" ? bus.departureTimeInSecond : bus.arrivalTimeInSecond, 10) * 1000 + 8 * 3600000);
 
@@ -33,6 +39,5 @@ module.exports = {
         ]
       }, [])]), [])
     )
-  ),
-  fetchStopEtas: ( stopId ) => []
+  );
 }
