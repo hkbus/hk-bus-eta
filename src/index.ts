@@ -21,10 +21,10 @@ export async function fetchEtas ( {route, stops, bound, dest, seq, serviceType, 
           route,
           stopId: stops.kmb[seq], 
           seq, co,
-          serviceType, bound: bound[company_id],
+          serviceType, bound: bound.kmb,
         }))
       } else if ( company_id === 'ctb' && stops.ctb ) {
-        _etas = _etas.concat( await ctb({stopId: stops.ctb[seq], route, bound: bound.kmb, seq }))
+        _etas = _etas.concat( await ctb({stopId: stops.ctb[seq], route, bound: bound.ctb, seq }))
       } else if ( company_id === 'nlb' && stops.nlb ) {
         _etas = _etas.concat( await nlb({stopId: stops.nlb[seq], nlbId}) )
       } else if ( company_id === 'lrtfeeder' && stops.lrtfeeder ) {
