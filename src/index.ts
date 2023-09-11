@@ -20,8 +20,8 @@ export async function fetchEtas ( {route, stops, bound, dest, seq, serviceType, 
         _etas = _etas.concat( await kmb({
           route,
           stopId: stops.kmb[seq], 
-          seq,
-          serviceType, bound: bound[company_id]
+          seq, co,
+          serviceType, bound: bound[company_id],
         }))
       } else if ( company_id === 'ctb' && stops.ctb ) {
         _etas = _etas.concat( await ctb({stopId: stops.ctb[seq], route, bound: bound[company_id], seq }))
