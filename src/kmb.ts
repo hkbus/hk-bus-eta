@@ -6,12 +6,13 @@ interface fetchEtasProps {
   co: RouteListEntry['co'],
   serviceType: RouteListEntry['serviceType'], 
   bound: RouteListEntry['bound']['kmb'],
+  stops: RouteListEntry['stops']['kmb'],
   stopId: string, 
   seq: number,
 }
 
 // parameter seq is 0-indexed here
-export default function fetchEtas ({stopId, route, seq, serviceType, co, bound}: fetchEtasProps): Promise<Eta[]> {
+export default function fetchEtas ({stopId, route, seq, serviceType, stops, co, bound}: fetchEtasProps): Promise<Eta[]> {
   return (
     fetch(`https://data.etabus.gov.hk/v1/transport/kmb/eta/${stopId}/${route}/${serviceType}`,{ 
       cache: isSafari ? 'default' : 'no-store'
@@ -27,6 +28,15 @@ export default function fetchEtas ({stopId, route, seq, serviceType, co, bound}:
       // if KMB is the only service provider and the service type is matched, 
       // then sequence number should be exact matched, noted that eta.seq is 1-indexed
       .filter((eta: any) => co.length > 1 || serviceType !== eta.service_type || eta.seq === seq + 1)
+      .filter((eta: any) => {
+        if ( stops[stops.length - 1] === stops[0] ) {
+          // handle circular route
+          if ( stopId === stops[0] ) {
+            return eta.seq === seq + 1
+          }
+        }
+        return true
+      })
       .map((e: any) => ({
         eta: e.eta,
         remark: {
