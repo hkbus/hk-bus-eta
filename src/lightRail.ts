@@ -23,7 +23,7 @@ export default function fetchEtas ({stopId, route, dest }: fetchEtasProps): Prom
               && ( dest_ch === dest.zh || dest_en.includes('Circular') ) 
               && stop === 0
             ))
-            .map( ({time_en}: any) => {
+            .map( ({time_en, train_length}: any) => {
               let waitTime = 0
               switch ( time_en.toLowerCase() ) {
                 case 'arriving':
@@ -40,8 +40,8 @@ export default function fetchEtas ({stopId, route, dest }: fetchEtasProps): Prom
                 eta: `${etaDate.getUTCFullYear()}-${`0${etaDate.getUTCMonth() + 1}`.slice(-2)}-${`0${etaDate.getUTCDate()}`.slice(-2)}`
                   +`T${`0${etaDate.getUTCHours()}`.slice(-2)}:${`0${etaDate.getMinutes()}`.slice(-2)}:${`0${etaDate.getSeconds()}`.slice(-2)}+08:00`,
                 remark: {
-                  zh: `${platform_id}號月台`,
-                  en: `Platform ${platform_id}`
+                  zh: `${platform_id}號月台 - ${Array(train_length).fill("▭").join("")}`,
+                  en: `Platform ${platform_id} - ${Array(train_length).fill("▭").join("")}`
                 },
                 co: 'lightRail'
               }
