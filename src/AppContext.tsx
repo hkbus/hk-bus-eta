@@ -92,6 +92,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       if (state.db === null) return;
       _fetchEtas({
         ...state.db.routeList[routeId],
+        stopList: state.db.stopList,
         seq: stopSeq,
         language,
       }).then((etas) => {

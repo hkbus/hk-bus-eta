@@ -219,6 +219,7 @@ import tyep { Eta } from "hk-bus-eta";
 
 fetchEtas({
   ...busDb.routeList["${routeId}"],
+  stopList: busDb.stopList,
   seq: ${seq},
   language: "${language}",
 }).then(etas => {
