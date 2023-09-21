@@ -7,7 +7,7 @@ export const isSafari = (() => {
         !(
           navigator.userAgent.includes("Chrome/") ||
           navigator.userAgent.includes("Chromium/")
-        )
+        ),
     );
   } catch {
     return false;
