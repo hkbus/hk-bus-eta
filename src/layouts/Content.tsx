@@ -213,7 +213,7 @@ fetchEtaDbMd5().then((md5: string) => {
 
 const getFetchEtasCode = (routeId: string, seq: number, language: string) =>
   `import { fetchEtas } from "hk-bus-eta";
-import tyep { Eta } from "hk-bus-eta";
+import type { Eta } from "hk-bus-eta";
 
 // busDb is the BusDb object fetched by fetchEtaDb
 
