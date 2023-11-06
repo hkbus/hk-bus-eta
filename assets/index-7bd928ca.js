@@ -157,7 +157,7 @@ fetchEtaDb().then((db: BusDb) => {
 fetchEtaDbMd5().then((md5: string) => {
   console.log(md5)
 })`,$6=(e,t,n)=>`import { fetchEtas } from "hk-bus-eta";
-import tyep { Eta } from "hk-bus-eta";
+import type { Eta } from "hk-bus-eta";
 
 // busDb is the BusDb object fetched by fetchEtaDb
 
