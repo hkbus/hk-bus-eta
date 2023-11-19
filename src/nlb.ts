@@ -37,6 +37,10 @@ export default function fetchEtas({
             zh: "",
             en: "",
           },
+          dest: {
+            zh: "",
+            en: "",
+          },
           co: "nlb",
         }));
     });

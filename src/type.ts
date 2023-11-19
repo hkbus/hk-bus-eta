@@ -77,5 +77,9 @@ export type Eta = {
     zh: string;
     en: string;
   };
+  dest: {
+    zh: string;
+    en: string;
+  };
   co: Company;
 };

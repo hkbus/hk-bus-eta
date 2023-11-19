@@ -38,6 +38,10 @@ export default function fetchEtas({
                 zh: data.remarks_tc,
                 en: data.remarks_en,
               },
+              dest: {
+                zh: "",
+                en: "",
+              },
               co: "gmb",
             })),
           ],

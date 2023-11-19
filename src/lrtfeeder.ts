@@ -65,6 +65,10 @@ export default function fetchEtas({
                           : "預定班次"
                         : ""),
                   },
+                  dest: {
+                    zh: '',
+                    en: '',
+                  },
                   co: "lrtfeeder",
                 },
               ];

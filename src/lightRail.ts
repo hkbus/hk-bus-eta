@@ -65,6 +65,10 @@ export default function fetchEtas({
                     .fill("▭")
                     .join("")}`,
                 },
+                dest: {
+                  zh: '',
+                  en: '',
+                },
                 co: "lightRail",
               };
             }, []),

@@ -32,8 +32,12 @@ export default function fetchEtas({
               {
                 eta: time.replace(" ", "T") + "+08:00",
                 remark: {
-                  zh: `${plat}號月台 往${stopList[dest].name.zh}`,
-                  en: `Platform ${plat} to ${stopList[dest].name.en}`,
+                  zh: `${plat}號月台`,
+                  en: `Platform ${plat}`,
+                },
+                dest: {
+                  zh: stopList[dest].name.zh,
+                  en: stopList[dest].name.en,
                 },
                 co: "mtr",
               },
