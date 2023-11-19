@@ -55,8 +55,8 @@ export default function fetchEtas({
         .map((e: any) => ({
           eta: e.eta,
           remark: {
-            zh: e.rmk_tc,
-            en: e.rmk_en,
+            zh: `往 ${e.dest_tc} ${e.rmk_tc}`,
+            en: `to ${e.dest_en} ${e.rmk_en}`,
           },
           co: "kmb",
         })),
