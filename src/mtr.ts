@@ -25,7 +25,7 @@ export default function fetchEtas({
       status === 0
         ? []
         : data[`${route}-${stopId}`][
-            bound.slice(-2, 1) === "U" ? "UP" : "DOWN"
+            bound.endsWith("UT") ? "UP" : "DOWN"
           ].reduce(
             (acc: Eta[], { time, plat, dest }: any) => [
               ...acc,

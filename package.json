@@ -1,6 +1,6 @@
 {
   "name": "hk-bus-eta",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Query the ETA (Estimated Time of Arrival) of HK Bus/Minibus/MTR/Lightrail",
   "main": "dist/index.js",
   "module": "esm/index.js",
