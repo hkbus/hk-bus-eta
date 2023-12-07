@@ -1,5 +1,5 @@
 import type { Eta, RouteListEntry } from "./type";
-import { isSafari } from "./utils";
+import { isSafari, getPlatformDisplay } from "./utils";
 
 interface fetchEtasProps {
   route: RouteListEntry["route"];
@@ -58,10 +58,10 @@ export default function fetchEtas({
                     -2,
                   )}:${`0${etaDate.getSeconds()}`.slice(-2)}+08:00`,
                 remark: {
-                  zh: `${platform_id}號月台 - ${Array(train_length)
+                  zh: `${getPlatformDisplay(platform_id, "zh")} - ${Array(train_length)
                     .fill("▭")
                     .join("")}`,
-                  en: `Platform ${platform_id} - ${Array(train_length)
+                  en: `${getPlatformDisplay(platform_id, "en")} - ${Array(train_length)
                     .fill("▭")
                     .join("")}`,
                 },

@@ -1,5 +1,5 @@
 import type { Eta, RouteListEntry, StopList } from "./type";
-import { isSafari } from "./utils";
+import { isSafari, getPlatformDisplay } from "./utils";
 
 interface fetchEtasProps {
   route: RouteListEntry["route"];
@@ -32,8 +32,8 @@ export default function fetchEtas({
               {
                 eta: time.replace(" ", "T") + "+08:00",
                 remark: {
-                  zh: `${plat}號月台`,
-                  en: `Platform ${plat}`,
+                  zh: `${getPlatformDisplay(plat, "zh")}`,
+                  en: `${getPlatformDisplay(plat, "en")}`,
                 },
                 dest: {
                   zh: stopList[dest].name.zh,
