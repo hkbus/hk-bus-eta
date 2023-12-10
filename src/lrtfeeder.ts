@@ -66,8 +66,8 @@ export default function fetchEtas({
                         : ""),
                   },
                   dest: {
-                    zh: '',
-                    en: '',
+                    zh: "",
+                    en: "",
                   },
                   co: "lrtfeeder",
                 },

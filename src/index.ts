@@ -68,6 +68,33 @@ export async function fetchEtas({
             bound: bound.mtr,
           }),
         );
+      } else if (company_id === "gmbHki" && stops.gmbHki) {
+        _etas = _etas.concat(
+          await gmb({
+            stopId: stops.gmbHki[seq],
+            gtfsId,
+            seq,
+            bound: bound.gmbHki,
+          }),
+        );
+      } else if (company_id === "gmbKln" && stops.gmbKln) {
+        _etas = _etas.concat(
+          await gmb({
+            stopId: stops.gmbKln[seq],
+            gtfsId,
+            seq,
+            bound: bound.gmbKln,
+          }),
+        );
+      } else if (company_id === "gmbNt" && stops.gmbNt) {
+        _etas = _etas.concat(
+          await gmb({
+            stopId: stops.gmbNt[seq],
+            gtfsId,
+            seq,
+            bound: bound.gmbNt,
+          }),
+        );
       }
     }
 
@@ -84,13 +111,15 @@ export async function fetchEtas({
 
 export async function fetchEtaDb(): Promise<EtaDb> {
   return fetch(
-    "https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json",
+    "https://data.hkbus.app/routeFareList.min.json",
+    // or https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json
   ).then((r) => r.json());
 }
 
 export async function fetchEtaDbMd5(): Promise<string> {
   return fetch(
-    "https://hkbus.github.io/hk-bus-crawling/routeFareList.md5",
+    "https://data.hkbus.app/routeFareList.md5",
+    // or https://hkbus.github.io/hk-bus-crawling/routeFareList.md5
   ).then((r) => r.text());
 }
 

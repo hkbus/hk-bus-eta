@@ -1,6 +1,6 @@
 {
   "name": "hk-bus-eta",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Query the ETA (Estimated Time of Arrival) of HK Bus/Minibus/MTR/Lightrail",
   "main": "dist/index.js",
   "module": "esm/index.js",
@@ -40,7 +40,7 @@
   "bugs": {
     "url": "https://github.com/hkbus/hk-bus-eta/issues"
   },
-  "homepage": "https://hk-bus-eta.chunlaw.io/",
+  "homepage": "https://hk-bus-eta.hkbus.app/",
   "devDependencies": {
     "@types/jest": "^29.5.4",
     "jest": "^29.6.4",

@@ -5,7 +5,10 @@ export type Company =
   | "lrtfeeder"
   | "gmb"
   | "lightRail"
-  | "mtr";
+  | "mtr"
+  | "gmbHki"
+  | "gmbKln"
+  | "gmbNt";
 
 export type Terminal = {
   en: string;
