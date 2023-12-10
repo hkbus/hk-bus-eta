@@ -110,17 +110,19 @@ export async function fetchEtas({
 }
 
 export async function fetchEtaDb(): Promise<EtaDb> {
-  return fetch(
-    "https://data.hkbus.app/routeFareList.min.json",
-    // or https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json
-  ).then((r) => r.json());
+  return fetch("https://data.hkbus.app/routeFareList.min.json")
+    .then((r) => r.json())
+    .catch(() => fetch("https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json")
+      .then(r => r.json())
+    );
 }
 
 export async function fetchEtaDbMd5(): Promise<string> {
-  return fetch(
-    "https://data.hkbus.app/routeFareList.md5",
-    // or https://hkbus.github.io/hk-bus-crawling/routeFareList.md5
-  ).then((r) => r.text());
+  return fetch("https://data.hkbus.app/routeFareList.md5")
+    .then((r) => r.text())
+    .catch(() => fetch("https://hkbus.github.io/hk-bus-crawling/routeFareList.md5")
+      .then(r => r.text())
+    );
 }
 
 export type * from "./type";
