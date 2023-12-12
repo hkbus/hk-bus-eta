@@ -110,17 +110,17 @@ export async function fetchEtas({
 }
 
 export async function fetchEtaDb(): Promise<EtaDb> {
-  return fetch("https://data.hkbus.app/routeFareList.min.json")
+  return fetch("https://data.hkbus.app/routeFareList.min.json", {cache: "no-store"})
     .then((r) => r.json())
-    .catch(() => fetch("https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json")
+    .catch(() => fetch("https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json", {cache: "no-store"})
       .then(r => r.json())
     );
 }
 
 export async function fetchEtaDbMd5(): Promise<string> {
-  return fetch("https://data.hkbus.app/routeFareList.md5")
+  return fetch("https://data.hkbus.app/routeFareList.md5", {cache: "no-store"})
     .then((r) => r.text())
-    .catch(() => fetch("https://hkbus.github.io/hk-bus-crawling/routeFareList.md5")
+    .catch(() => fetch("https://hkbus.github.io/hk-bus-crawling/routeFareList.md5", {cache: "no-store"})
       .then(r => r.text())
     );
 }

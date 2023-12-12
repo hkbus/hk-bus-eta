@@ -35,8 +35,8 @@ export default function fetchEtas({
             ...eta.map((data: any) => ({
               eta: data.timestamp,
               remark: {
-                zh: data.remarks_tc,
-                en: data.remarks_en,
+                zh: data.remarks_tc ?? "",
+                en: data.remarks_en ?? "",
               },
               dest: {
                 zh: "",
