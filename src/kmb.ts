@@ -30,7 +30,7 @@ export default function fetchEtas({
     .then((response) => response.json())
     .then(({ data }) =>
       data
-        .filter((e: any) => e.eta !== null && e.dir === bound)
+        .filter((e: any) => e.dir === bound)
         .sort((a: any, b: any) =>
           Math.abs(a.seq - seq) < Math.abs(b.seq - seq) ? -1 : 1,
         )

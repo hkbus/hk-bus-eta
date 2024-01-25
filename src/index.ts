@@ -98,11 +98,15 @@ export async function fetchEtas({
       }
     }
 
-    return _etas.sort((a, b) => {
-      if (a.eta === "") return 1;
-      else if (b.eta === "") return -1;
-      return a.eta < b.eta ? -1 : 1;
-    });
+    if (_etas.some((e) => e.eta)) {
+      _etas = _etas.filter((e) => e.eta);
+    }
+    return _etas
+      .sort((a, b) => {
+        if (!a.eta || a.eta === "") return 1;
+        else if (!b.eta || b.eta === "") return -1;
+        return a.eta < b.eta ? -1 : 1;
+      });
   } catch (err) {
     console.error(err);
     return [];
