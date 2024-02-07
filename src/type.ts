@@ -40,6 +40,7 @@ export type RouteListEntry = {
   };
   readonly gtfsId: string;
   readonly nlbId: string;
+  readonly url: string | null;
 };
 
 export type Location = {
