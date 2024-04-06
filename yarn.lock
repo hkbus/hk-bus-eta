@@ -1377,10 +1377,10 @@ highlight.js@^10.4.1, highlight.js@~10.7.0:
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.7.3.tgz#697272e3991356e40c3cac566a74eef681756531"
   integrity sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==
 
-hk-bus-eta@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/hk-bus-eta/-/hk-bus-eta-3.2.0.tgz#2cc5c3574c4c71c5886a8b8f7aceeb5da682333b"
-  integrity sha512-PMGR42kGhLfREuGQWQGUYy1VbbHoknp421G9c8EOPWtUtFgGHHFk3QPqlO4sjjXyyL+TAc51TtQXoTBB5M03aQ==
+hk-bus-eta@^3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/hk-bus-eta/-/hk-bus-eta-3.3.2.tgz#1f3c736cfdf84758dadcc013179aa5de9368af29"
+  integrity sha512-MUe3AlFKy6NUIEECdV7AADeSYzkNB8Izjpx3B3xb9UKvrBoVej9teCUv7Ng/6Y5z7Qtxan0gB/nGLKk3fCh+YQ==
 
 hoist-non-react-statics@^3.3.1:
   version "3.3.2"
