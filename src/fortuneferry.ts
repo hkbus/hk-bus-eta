@@ -20,7 +20,7 @@ const getCode = (zhName: string) => {
   } else if ( zhName.includes("觀塘") ) {
     return "KT"
   } else if ( zhName.includes("啟德") ) {
-    return "KT"
+    return "KTK"
   } else if ( zhName.includes("屯門") ) {
     return "TM"
   } else if ( zhName.includes("東涌") ) {
