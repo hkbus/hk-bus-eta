@@ -23,10 +23,10 @@ export default function fetchEtas({
       return data
         .map(({depart_time, rmk_en, rmk_tc, route_tc, route_en}: any) => {
           const date = new Date();
-          let guess = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}T${depart_time}:00+08:00}`
+          let guess = `${date.getFullYear()}-${('0'+(date.getMonth()+1)).slice(-2)}-${('0'+date.getDate()).slice(-2)}T${depart_time}:00+08:00`
           if ( (new Date(guess)) < date ) {
             date.setDate(date.getDate() + 1)
-            guess = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}T${depart_time}:00+08:00}`
+            guess = `${date.getFullYear()}-${('0'+(date.getMonth()+1)).slice(-2)}-${('0'+date.getDate()).slice(-2)}T${depart_time}:00+08:00`
           }
           return {
             eta: guess,

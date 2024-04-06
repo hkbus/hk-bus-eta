@@ -1,6 +1,6 @@
 {
   "name": "hk-bus-eta",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "description": "Query the ETA (Estimated Time of Arrival) of HK Bus/Minibus/MTR/Lightrail",
   "main": "dist/index.js",
   "module": "esm/index.js",
@@ -10,7 +10,7 @@
     "src"
   ],
   "scripts": {
-    "clean": "rimraf dist",
+    "clean": "rimraf esm dist",
     "test": "jest",
     "prebuild": "yarn clean && yarn test",
     "build:esm": "tsc --target es2018 --outDir esm",
