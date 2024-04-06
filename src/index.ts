@@ -5,6 +5,9 @@ import lrtfeeder from "./lrtfeeder";
 import gmb from "./gmb";
 import lightrail from "./lightRail";
 import mtr from "./mtr";
+import sunferry from "./sunferry"
+import fortuneferry from "./fortuneferry";
+import hkkf from "./hkkf";
 import { RouteListEntry, EtaDb, Eta, StopList } from "./type";
 
 interface fetchEtasProps extends RouteListEntry {
@@ -68,33 +71,16 @@ export async function fetchEtas({
             bound: bound.mtr,
           }),
         );
-      } else if (company_id === "gmbHki" && stops.gmbHki) {
+      } else if (company_id === "fortuneferry" && stops.fortuneferry) {
         _etas = _etas.concat(
-          await gmb({
-            stopId: stops.gmbHki[seq],
-            gtfsId,
-            seq,
-            bound: bound.gmbHki,
-          }),
-        );
-      } else if (company_id === "gmbKln" && stops.gmbKln) {
-        _etas = _etas.concat(
-          await gmb({
-            stopId: stops.gmbKln[seq],
-            gtfsId,
-            seq,
-            bound: bound.gmbKln,
-          }),
-        );
-      } else if (company_id === "gmbNt" && stops.gmbNt) {
-        _etas = _etas.concat(
-          await gmb({
-            stopId: stops.gmbNt[seq],
-            gtfsId,
-            seq,
-            bound: bound.gmbNt,
-          }),
-        );
+          await fortuneferry({
+            route, stops, seq, stopList
+          })
+        )
+      } else if (company_id === "sunferry" && stops.sunferry) {
+        _etas = _etas.concat(await sunferry({route, seq}))
+      } else if (company_id === "hkkf" && stops.hkkf) {
+        _etas = _etas.concat(await hkkf({route, bound: bound.hkkf, seq}))
       }
     }
 

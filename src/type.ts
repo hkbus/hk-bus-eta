@@ -6,9 +6,9 @@ export type Company =
   | "gmb"
   | "lightRail"
   | "mtr"
-  | "gmbHki"
-  | "gmbKln"
-  | "gmbNt";
+  | "sunferry"
+  | "hkkf"
+  | "fortuneferry";
 
 export type Terminal = {
   en: string;
@@ -85,4 +85,6 @@ export type Eta = {
     en: string;
   };
   co: Company;
+  lat?: number;
+  lng: number;
 };
