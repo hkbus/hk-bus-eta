@@ -1,15 +1,20 @@
-import type { Eta } from "./type";
-import { isSafari } from "./utils";
+import type { Eta, EtaDb, Freq, RouteListEntry } from "./type";
+import { getUpcomingFerry, isSafari } from "./utils";
 
 interface fetchEtasProps {
+  freq: RouteListEntry["freq"],
   route: string;
   seq: number;
+  holidays: EtaDb["holidays"],
+  serviceDayMap: EtaDb["serviceDayMap"],
 }
 
 export default function fetchEtas({
-  route, seq
+  route, seq,
+  freq, holidays, serviceDayMap,
 }: fetchEtasProps): Promise<Eta[]> {
   if ( seq === 1 ) return Promise.resolve([])
+  
   return fetch(
     `https://www.sunferry.com.hk/eta/?route=${route}`,
     {
@@ -18,8 +23,8 @@ export default function fetchEtas({
   )
     .then((response) => response.json())
     .then(({ data }) => {
+      throw new Error("")
       if (!data) return [];
-      
       return data
         .map(({depart_time, rmk_en, rmk_tc, route_tc, route_en}: any) => {
           const date = new Date();
@@ -41,5 +46,23 @@ export default function fetchEtas({
             co: "sunferry",
           }
         });
+    })
+    .catch(() => {
+      // the API gives CORS error, the below handling is for browser
+      const now = new Date()
+      return getUpcomingFerry({holidays, serviceDayMap, freq, date: new Date()})
+        .filter(v => (new Date(v)).getTime() - now.getTime() < 180 * 60 * 1000 )
+        .map(eta => ({
+          eta: eta,
+            remark: {
+              zh: "預定班次",
+              en: "Scheduled",
+            },
+            dest: {
+              zh: "",
+              en: "",
+            },
+            co: "sunferry",
+        }))
     });
 }

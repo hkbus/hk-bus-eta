@@ -1,13 +1,15 @@
-import type { Eta, RouteListEntry, StopList } from "./type";
-import { isSafari } from "./utils";
+import type { Eta, EtaDb, RouteListEntry, StopList } from "./type";
+import { getUpcomingFerry, isSafari } from "./utils";
 
 interface fetchEtasProps {
-  route: string;
   stops: {
     fortuneferry: string[];
   }
   seq: number;
   stopList: StopList;
+  freq: RouteListEntry["freq"],
+  holidays: EtaDb["holidays"];
+  serviceDayMap: EtaDb["serviceDayMap"];
 }
 
 const getCode = (zhName: string) => {
@@ -34,12 +36,33 @@ const getCode = (zhName: string) => {
 }
 
 export default function fetchEtas({
-  route, stops: { fortuneferry: stops }, seq, stopList
+  stops: { fortuneferry: stops }, seq,
+  holidays, freq, serviceDayMap
 }: fetchEtasProps): Promise<Eta[]> {
   if ( stops.length === seq - 1 ) return Promise.resolve([]);
-  const u = getCode(stopList[stops[seq]].name.zh)
-  const v = getCode(stopList[stops[seq+1]].name.zh)
+  const now = new Date()
+  return Promise.resolve(
+    getUpcomingFerry({holidays, serviceDayMap, freq, date: new Date()})
+      .filter(v => (new Date(v)).getTime() - now.getTime() < 180 * 60 * 1000 )
+      .map(eta => ({
+        eta: eta,
+          remark: {
+            zh: "預定班次",
+            en: "Scheduled",
+          },
+          dest: {
+            zh: "",
+            en: "",
+          },
+          co: "fortuneferry",
+      }))
+  )
+  
+  /*
+   * the official API is broken most of the time, keep it for reference
 
+  const v = getCode(stopList[stops[seq+1]].name.zh)
+  const u = getCode(stopList[stops[seq]].name.zh)
   return fetch(
     `https://www.hongkongwatertaxi.com.hk/eta/?route=${u}${v}`,
     {
@@ -72,4 +95,5 @@ export default function fetchEtas({
           }
         });
     });
+  */
 }

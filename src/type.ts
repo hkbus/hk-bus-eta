@@ -70,7 +70,7 @@ export type EtaDb = {
   stopMap: StopMap;
   serviceDayMap: Record<
     string,
-    [0 | 1, 0 | 1, 0 | 1, 0 | 1, 0 | 1, 0 | 1, 0 | 1]
+    ["0" | "1", "0" | "1", "0" | "1", "0" | "1", "0" | "1", "0" | "1", "0" | "1"]
   >;
 };
 
@@ -86,5 +86,5 @@ export type Eta = {
   };
   co: Company;
   lat?: number;
-  lng: number;
+  lng?: number;
 };

@@ -12,6 +12,8 @@ import { RouteListEntry, EtaDb, Eta, StopList } from "./type";
 
 interface fetchEtasProps extends RouteListEntry {
   stopList: StopList;
+  holidays: EtaDb["holidays"],
+  serviceDayMap: EtaDb["serviceDayMap"],
   language: "zh" | "en";
   seq: number;
 }
@@ -21,6 +23,7 @@ export async function fetchEtas({
   stops,
   bound,
   dest,
+  freq,
   seq,
   serviceType,
   co,
@@ -28,6 +31,8 @@ export async function fetchEtas({
   gtfsId,
   stopList,
   language,
+  holidays,
+  serviceDayMap,
 }: fetchEtasProps): Promise<Eta[]> {
   try {
     let _etas: Eta[] = [];
@@ -74,13 +79,13 @@ export async function fetchEtas({
       } else if (company_id === "fortuneferry" && stops.fortuneferry) {
         _etas = _etas.concat(
           await fortuneferry({
-            route, stops, seq, stopList
+            stops, seq, stopList, freq, serviceDayMap, holidays,
           })
         )
       } else if (company_id === "sunferry" && stops.sunferry) {
-        _etas = _etas.concat(await sunferry({route, seq}))
+        _etas = _etas.concat(await sunferry({route, seq, holidays, serviceDayMap, freq}))
       } else if (company_id === "hkkf" && stops.hkkf) {
-        _etas = _etas.concat(await hkkf({route, bound: bound.hkkf, seq}))
+        _etas = _etas.concat(await hkkf({freq, seq, holidays, serviceDayMap}))
       }
     }
 
