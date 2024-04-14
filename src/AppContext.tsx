@@ -95,6 +95,8 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
         stopList: state.db.stopList,
         seq: stopSeq,
         language,
+        holidays: state.db.holidays,
+        serviceDayMap: state.db.serviceDayMap,
       }).then((etas) => {
         setState((prev) => ({
           ...prev,
