@@ -39,7 +39,7 @@ export default function fetchEtas({
   stops: { fortuneferry: stops }, seq,
   holidays, freq, serviceDayMap
 }: fetchEtasProps): Promise<Eta[]> {
-  if ( stops.length === seq - 1 ) return Promise.resolve([]);
+  if ( seq >= 1 ) return Promise.resolve([]);
   const now = new Date()
   return Promise.resolve(
     getUpcomingFerry({holidays, serviceDayMap, freq, date: new Date()})
