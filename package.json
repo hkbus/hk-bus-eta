@@ -16,8 +16,7 @@
     "build:esm": "tsc --target es2018 --outDir esm",
     "build:cjs": "tsc --target es2015 --module commonjs --outDir dist",
     "build": "yarn build:cjs && yarn build:esm",
-    "prepublish": "yarn build",
-    "publish": "npm publish"
+    "prepublish": "yarn build"
   },
   "repository": {
     "type": "git",
