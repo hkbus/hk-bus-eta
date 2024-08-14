@@ -23,7 +23,7 @@ export default function fetchEtas({
     .then((response) => response.json())
     .then(({ data }) =>
       data
-        .filter((eta: any) => eta.eta && bound.includes(eta.dir))
+        .filter((eta: any) => bound.includes(eta.dir))
         // filter the eta by the stop sequence information
         // as the route data may not 100% match
         // use the nearest seq
