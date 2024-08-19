@@ -120,4 +120,23 @@ export async function fetchEtaDbMd5(): Promise<string> {
     );
 }
 
+export async function fetchRouteUpdatedAt(route: RouteListEntry): Promise<number> {
+  const filename = `${route.route}+${route.serviceType}+${route.orig.en}+${route.dest.en}`
+  return fetch(
+    `https://data.hkbus.app/route-ts/${filename.replace(/[\\\/\:\*\?\"\<\>\|\]\']/g, '')}`
+  )
+    .then((r) => {
+      if (r.ok) {
+        return r.text();
+      }
+      throw Error("no update");
+    })
+    .then((r) => 
+      parseInt(r, 10) * 1000
+    )
+    .catch((e) => {
+      return 0;
+    });
+}
+
 export type * from "./type";
