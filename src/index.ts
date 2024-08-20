@@ -121,7 +121,7 @@ export async function fetchEtaDbMd5(): Promise<string> {
 }
 
 export async function fetchRouteUpdatedAt(route: RouteListEntry): Promise<number> {
-  const filename = `${route.route}+${route.serviceType}+${route.orig.en}+${route.dest.en}`
+  const filename = `${route.route}+${route.serviceType}+${route.orig.en}+${route.dest.en}`.toUpperCase()
   return fetch(
     `https://data.hkbus.app/route-ts/${filename.replace(/[\\\/\:\*\?\"\<\>\|\]\']/g, '')}`
   )
