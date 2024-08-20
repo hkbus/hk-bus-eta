@@ -139,4 +139,6 @@ export async function fetchRouteUpdatedAt(route: RouteListEntry): Promise<number
     });
 }
 
+export * from "./journeyTime";
+
 export type * from "./type";

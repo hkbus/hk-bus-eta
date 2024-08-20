@@ -1,6 +1,6 @@
 {
   "name": "hk-bus-eta",
-  "version": "3.4.1",
+  "version": "3.5.0",
   "description": "Query the ETA (Estimated Time of Arrival) of HK Bus/Minibus/MTR/Lightrail",
   "main": "dist/index.js",
   "module": "esm/index.js",
@@ -16,7 +16,8 @@
     "build:esm": "tsc --target es2018 --outDir esm",
     "build:cjs": "tsc --target es2015 --module commonjs --outDir dist",
     "build": "yarn build:cjs && yarn build:esm",
-    "prepublish": "yarn build"
+    "prepublish": "yarn build",
+    "est": "ts-node ./est.ts"
   },
   "repository": {
     "type": "git",
