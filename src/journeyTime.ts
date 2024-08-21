@@ -51,11 +51,15 @@ export async function fetchEstJourneyTime({
         .then(r => r.json())
         .then(({eta}) => {
           const [hh, mm] = eta.split(":").map((v: string) => parseInt(v, 10))
-          return hh * 60 + mm + 1;
+          return hh * 60 + mm;
         })
         .catch(() => {
-          //  for any error, assume 5 minutes travel time blindly
-          return 5;
+          //  for any error, assume 4 minutes journey time blindly
+          return 4;
+        })
+        .then(m => {
+          // margin for car accelerating, decelerating, and passenger picking up and dropping off
+          return m + 1
         })
     ))
     minutes.forEach(m => {
