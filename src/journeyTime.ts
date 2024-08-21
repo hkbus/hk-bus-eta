@@ -49,13 +49,28 @@ export async function fetchEstJourneyTime({
         signal,
       })
         .then(r => r.json())
-        .then(({eta}) => {
+        .then(({eta, distM, jSpeed}) => {
+          const speedStr = /(\d+)公里\/小時/g.exec(jSpeed)?.[1];
+          if (
+            speedStr !== null &&
+            speedStr !== undefined &&
+            !isNaN(parseInt(speedStr, 10))
+          ) {
+            return (distM / parseInt(speedStr, 10) / 1000) * 60;
+          }
+          console.warn(
+            "Unable to parse TDAS response for more precise journey time. Falling back."
+          );
           const [hh, mm] = eta.split(":").map((v: string) => parseInt(v, 10))
-          return hh * 60 + mm + 1;
+          return hh * 60 + mm;
         })
         .catch(() => {
-          //  for any error, assume 5 minutes travel time blindly
-          return 5;
+          //  for any error, assume 4 minutes journey time blindly
+          return 4;
+        })
+        .then(m => {
+          // margin for car accelerating, decelerating, and passenger picking up and dropping off
+          return m + 1
         })
     ))
     minutes.forEach(m => {
