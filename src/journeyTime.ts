@@ -6,11 +6,13 @@ import { RouteListEntry, StopList } from "./type";
  * @returns {number} journey time in minute
  */
 export async function fetchEstJourneyTime({
-  route, stopList, startSeq, endSeq, batchSize = 4
+  route, stopList, startSeq, endSeq, batchSize = 4, signal
 }: {
-  route: RouteListEntry, stopList: StopList, startSeq: number, endSeq: number, batchSize?: number
+  route: RouteListEntry, stopList: StopList, startSeq: number, endSeq: number, batchSize?: number,
+  signal?: AbortSignal | null,
 }): Promise<number> {
   const stops = Object.values(route.stops)[0]
+  if ( !["kmb", "nlb", "ctb", "lrtfeeder", "gmb"].includes(Object.keys(route.stops)[0]) ) throw new Error("Support vehicle transport only")
   if ( startSeq < 0 ) throw new Error("startSeq should be ≥ 0")
   if ( endSeq >= stops.length ) throw new Error("endSeq should be < number of stops")
   if ( startSeq >= endSeq ) throw new Error("startSeq should be < endSeq")
@@ -18,20 +20,21 @@ export async function fetchEstJourneyTime({
   let ret = 0
   let payloads = []
   for ( let i = startSeq; i < endSeq; ++i ) {
+    payloads.push(
+      JSON.stringify({
+        start: {
+          lat: stopList[stops[i]].location.lat,
+          long: stopList[stops[i]].location.lng,
+        }, 
+        end: {
+          lat: stopList[stops[i+1]].location.lat,
+          long: stopList[stops[i+1]].location.lng,
+        }, 
+        departIn: Math.round(ret / 15) * 15
+      })
+    )
     if ( payloads.length < batchSize && i !== endSeq - 1 ) {
-      payloads.push(
-        JSON.stringify({
-          start: {
-            lat: stopList[stops[i]].location.lat,
-            long: stopList[stops[i]].location.lng,
-          }, 
-          end: {
-            lat: stopList[stops[i+1]].location.lat,
-            long: stopList[stops[i+1]].location.lng,
-          }, 
-          departIn: Math.round(ret / 15) * 15
-        })
-      )
+      // skip fetching until whole batch filled
       continue
     }
     const minutes = await Promise.all(payloads.map(payload => 
@@ -42,12 +45,17 @@ export async function fetchEstJourneyTime({
         headers: {
           'Content-Type': "application/json",
         },
-        body: payload
+        body: payload,
+        signal,
       })
         .then(r => r.json())
         .then(({eta}) => {
           const [hh, mm] = eta.split(":").map((v: string) => parseInt(v, 10))
           return hh * 60 + mm + 1;
+        })
+        .catch(() => {
+          //  for any error, assume 5 minutes travel time blindly
+          return 5;
         })
     ))
     minutes.forEach(m => {
