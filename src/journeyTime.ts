@@ -85,9 +85,9 @@ export async function fetchEstJourneyTime({
             return 4;
           })
           .then(m => {
-            __HK_BUS_ETA_JT_CACHE__[key] = { m: m + 1, ts }
+            __HK_BUS_ETA_JT_CACHE__[key] = { m: m * 1.1, ts }
             // margin for car accelerating, decelerating, and passenger picking up and dropping off
-            return m + 1
+            return m * 1.1
           })
         )
       }
