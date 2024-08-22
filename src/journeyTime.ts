@@ -71,7 +71,8 @@ export async function fetchEstJourneyTime({
               speedStr !== undefined &&
               !isNaN(parseInt(speedStr, 10))
             ) {
-              return (distM / parseInt(speedStr, 10) / 1000) * 60;
+              // Set the speed limit as 70 km/h
+              return (distM / Math.min(parseInt(speedStr, 10), 70) / 1000) * 60;
             }
             console.warn(
               "Unable to parse TDAS response for more precise journey time. Falling back."
