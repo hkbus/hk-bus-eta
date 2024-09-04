@@ -53,9 +53,7 @@ export async function fetchEstJourneyTime({
       }
 
       return (
-        //TODO: update to use gov API
-        // fetch('https://tdas.hkbus.app/tdas/api/route', {
-        fetch('https://tdas.hkbus.app/tdas/api/route', {
+        fetch('https://tdas-api.hkemobility.gov.hk/tdas/api/route', {
           method: "POST",
           headers: {
             'Content-Type': "application/json",
