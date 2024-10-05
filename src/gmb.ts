@@ -30,20 +30,40 @@ export default function fetchEtas({
         )
         .filter(({ stop_seq }: any) => stop_seq === seq + 1)
         .reduce(
-          (acc: Eta[], { eta }: any) => [
+          (
+            acc: Eta[],
+            { enabled, eta, description_tc, description_en }: any
+          ) => [
             ...acc,
-            ...eta.map((data: any) => ({
-              eta: data.timestamp,
-              remark: {
-                zh: data.remarks_tc ?? "",
-                en: data.remarks_en ?? "",
-              },
-              dest: {
-                zh: "",
-                en: "",
-              },
-              co: "gmb",
-            })),
+            ...(enabled
+              ? eta.map((data: any) => {
+                  return {
+                    eta: data.timestamp,
+                    remark: {
+                      zh: data.remarks_tc ?? "",
+                      en: data.remarks_en ?? "",
+                    },
+                    dest: {
+                      zh: "",
+                      en: "",
+                    },
+                    co: "gmb",
+                  };
+                })
+              : [
+                  {
+                    eta: null,
+                    remark: {
+                      zh: description_tc ?? "",
+                      en: description_en ?? "",
+                    },
+                    dest: {
+                      zh: "",
+                      en: "",
+                    },
+                    co: "gmb",
+                  },
+                ]),
           ],
           [],
         ),
