@@ -21,28 +21,49 @@ export default function fetchEtas({
     },
   )
     .then((response) => response.json())
-    .then(({ data, status }) =>
-      status === 0
-        ? []
-        : data[`${route}-${stopId}`][
-            bound.endsWith("UT") ? "UP" : "DOWN"
-          ].reduce(
-            (acc: Eta[], { time, plat, dest }: any) => [
-              ...acc,
-              {
-                eta: time.replace(" ", "T") + "+08:00",
-                remark: {
-                  zh: `${plat}號月台`,
-                  en: `Platform ${plat}`,
-                },
-                dest: {
-                  zh: stopList[dest].name.zh,
-                  en: stopList[dest].name.en,
-                },
-                co: "mtr",
-              },
-            ],
-            [],
-          ),
-    );
+    .then(({ data, status, isdelay }) => {
+      if (status === 0) return [];
+      const etas = data[`${route}-${stopId}`][
+        bound.endsWith("UT") ? "UP" : "DOWN"
+      ].reduce(
+        (acc: Eta[], { time, plat, dest }: any) => [
+          ...acc,
+          {
+            eta: time.replace(" ", "T") + "+08:00",
+            remark: {
+              zh: [`${plat}號月台`, ...(isdelay === "Y" ? ["延誤"] : [])].join(
+                " - "
+              ),
+              en: [
+                `Platform ${plat}`,
+                ...(isdelay === "Y" ? ["Delay"] : []),
+              ].join(" - "),
+            },
+            dest: {
+              zh: stopList[dest].name.zh,
+              en: stopList[dest].name.en,
+            },
+            co: "mtr",
+          },
+        ],
+        [],
+      );
+      if (isdelay && etas.length === 0) {
+        return [
+          {
+            eta: null,
+            remark: {
+              zh: "延誤",
+              en: "Delay",
+            },
+            dest: {
+              zh: "",
+              en: "",
+            },
+            co: "mtr",
+          },
+        ];
+      }
+      return etas;
+    });
 }
