@@ -21,8 +21,9 @@ export default function fetchEtas({
     },
   )
     .then((response) => response.json())
-    .then(({ platform_list }) =>
-      platform_list.reduce(
+    .then(({ status, platform_list }) => {
+      if (status === 0) return [];
+      return platform_list.reduce(
         (acc: Eta[], { route_list, platform_id }: any) => [
           ...acc,
           ...route_list
@@ -74,8 +75,8 @@ export default function fetchEtas({
             }, []),
         ],
         [],
-      ),
-    )
+      )
+    })
     .catch((e) => {
       console.error(e);
       return [];
