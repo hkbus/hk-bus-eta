@@ -31,12 +31,15 @@ export default function fetchEtas({
           {
             eta: time.replace(" ", "T") + "+08:00",
             remark: {
-              zh: [`${plat}號月台`, ...(isdelay === "Y" ? ["延誤"] : [])].join(
-                " - "
-              ),
+              zh: [
+                `${plat}號月台`,
+                ...(isdelay === "Y" ? ["延誤／事故／特別服務"] : []),
+              ].join(" - "),
               en: [
                 `Platform ${plat}`,
-                ...(isdelay === "Y" ? ["Delay"] : []),
+                ...(isdelay === "Y"
+                  ? ["Delay/ Incident/ Special Service"]
+                  : []),
               ].join(" - "),
             },
             dest: {
@@ -53,8 +56,8 @@ export default function fetchEtas({
           {
             eta: null,
             remark: {
-              zh: "延誤",
-              en: "Delay",
+              zh: "延誤／事故／特別服務",
+              en: "Delay/ Incident/ Special Service",
             },
             dest: {
               zh: "",
