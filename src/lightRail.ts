@@ -25,7 +25,8 @@ export default function fetchEtas({
       platform_list.reduce(
         (acc: Eta[], { route_list, platform_id }: any) => [
           ...acc,
-          ...route_list
+          // route_list is null when there are no ETAs available
+          ...(route_list ?? [])
             .filter(
               ({ route_no, dest_ch, dest_en, stop }: any) =>
                 route === route_no &&
