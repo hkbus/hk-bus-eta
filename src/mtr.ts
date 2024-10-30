@@ -51,7 +51,7 @@ export default function fetchEtas({
         ],
         [],
       );
-      if (isdelay && etas.length === 0) {
+      if (isdelay === "Y" && etas.length === 0) {
         return [
           {
             eta: null,
