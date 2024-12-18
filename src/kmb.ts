@@ -65,7 +65,7 @@ export default function fetchEtas({
           co: "kmb",
         })),
     )
-    .catch(err => {
+    .catch((err) => {
       console.error(err);
       return [];
     });

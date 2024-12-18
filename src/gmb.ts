@@ -32,7 +32,7 @@ export default function fetchEtas({
         .reduce(
           (
             acc: Eta[],
-            { enabled, eta, description_tc, description_en }: any
+            { enabled, eta, description_tc, description_en }: any,
           ) => [
             ...acc,
             ...(enabled

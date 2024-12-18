@@ -9,26 +9,29 @@ interface fetchEtasProps {
 }
 
 export default function fetchEtas({
-  freq, seq, holidays, serviceDayMap,
+  freq,
+  seq,
+  holidays,
+  serviceDayMap,
 }: fetchEtasProps): Promise<Eta[]> {
-  if ( seq >= 1 ) return Promise.resolve([])
-  const now = new Date()
+  if (seq >= 1) return Promise.resolve([]);
+  const now = new Date();
   return Promise.resolve(
-    getUpcomingFerry({holidays, serviceDayMap, freq, date: new Date()})
-      .filter(v => (new Date(v)).getTime() - now.getTime() < 180 * 60 * 1000 )
-      .map(eta => ({
+    getUpcomingFerry({ holidays, serviceDayMap, freq, date: new Date() })
+      .filter((v) => new Date(v).getTime() - now.getTime() < 180 * 60 * 1000)
+      .map((eta) => ({
         eta: eta,
-          remark: {
-            zh: "預定班次",
-            en: "Scheduled",
-          },
-          dest: {
-            zh: "",
-            en: "",
-          },
-          co: "fortuneferry",
-      }))
-  )
+        remark: {
+          zh: "預定班次",
+          en: "Scheduled",
+        },
+        dest: {
+          zh: "",
+          en: "",
+        },
+        co: "fortuneferry",
+      })),
+  );
   /*
    * the official API is broken most of the time, keep it for reference
   return fetch(

@@ -46,7 +46,7 @@ export default function fetchEtas({
           co: "ctb",
         })),
     )
-    .catch(err => {
+    .catch((err) => {
       console.error(err);
       return [];
     });
