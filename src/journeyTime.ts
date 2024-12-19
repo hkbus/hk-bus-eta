@@ -1,4 +1,5 @@
 import { RouteListEntry, StopList } from "./type";
+import { formatInTimeZone } from "date-fns-tz";
 
 type JT_CACHE = Record<
   string,
@@ -19,8 +20,42 @@ async function fetchEstJourneyTimeBasedOnHistoricalData({
   startSeq: number;
   endSeq: number;
 }): Promise<number> {
-  const requests = []
-  for ( let i=startSeq;i<endSeq;++i ) {
+  const requests = [];
+  for (let i = startSeq; i < endSeq; ++i) {
+    const start = Object.values(route.stops)[0][startSeq];
+    const end = Object.values(route.stops)[0][endSeq];
+    const day =
+      parseInt(formatInTimeZone(new Date(), "Asia/Hong_Koong", "i"), 10) - 1;
+    const hour = formatInTimeZone(new Date(), "Asia/Hong_Koong", "HH");
+    requests.push(
+      fetch(
+        `https://raw.githubusercontent.com/HK-Bus-ETA/hk-bus-time-between-stops/refs/heads/pages/times_hourly/${day}/${hour}/${start.slice(0, 2)}.json`,
+      )
+        .then((r) => r.json())
+        .then((r) => {
+          if (r[start][end]) {
+            return r[start][end];
+          }
+          throw new Error("not found");
+        }),
+    );
+  }
+  return Promise.all(requests).then((seconds) =>
+    Math.ceil(seconds.reduce((acc, cur) => acc + cur, 0) / 60),
+  );
+}
+
+async function fetchEstJourneyTimeBasedOnHistoricalAvgData({
+  route,
+  startSeq,
+  endSeq,
+}: {
+  route: RouteListEntry;
+  startSeq: number;
+  endSeq: number;
+}): Promise<number> {
+  const requests = [];
+  for (let i = startSeq; i < endSeq; ++i) {
     const start = Object.values(route.stops)[0][startSeq];
     const end = Object.values(route.stops)[0][endSeq];
     requests.push(
@@ -32,12 +67,13 @@ async function fetchEstJourneyTimeBasedOnHistoricalData({
           if (r[start][end]) {
             return r[start][end];
           }
-          throw new Error("not found")
-        })
-    )
+          throw new Error("not found");
+        }),
+    );
   }
-  return Promise.all(requests).then((seconds) => Math.ceil(seconds.reduce((acc, cur) => acc+cur, 0) / 60))
-  
+  return Promise.all(requests).then((seconds) =>
+    Math.ceil(seconds.reduce((acc, cur) => acc + cur, 0) / 60),
+  );
 }
 
 /**
@@ -91,15 +127,15 @@ export async function fetchEstJourneyTime({
       }),
       {
         startSeq: i,
-        endSeq: i+1,
-      }
+        endSeq: i + 1,
+      },
     ]);
     if (payloads.length < batchSize && i !== endSeq - 1) {
       // skip fetching until whole batch filled
       continue;
     }
     const seconds = await Promise.all(
-      payloads.map(([key, payload, {startSeq, endSeq}]) => {
+      payloads.map(([key, payload, { startSeq, endSeq }]) => {
         // load from cache if it is query within 15 minutes
         if (
           key in __HK_BUS_ETA_JT_CACHE__ &&
@@ -109,43 +145,59 @@ export async function fetchEstJourneyTime({
         }
 
         return fetchEstJourneyTimeBasedOnHistoricalData({
-          route, startSeq, endSeq
-        }).catch(() => (
-          fetch("https://tdas-api.hkemobility.gov.hk/tdas/api/route", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: payload,
-            signal,
-          })
-            .then((r) => r.json())
-            .then(({ eta, distM, jSpeed }) => {
-              const speedStr = /(\d+)公里\/小時/g.exec(jSpeed)?.[1];
-              if (
-                speedStr !== null &&
-                speedStr !== undefined &&
-                !isNaN(parseInt(speedStr, 10))
-              ) {
-                // Set the speed limit as 70 km/h
-                return (distM / Math.min(parseInt(speedStr, 10), 70) / 1000) * 60 * 60;
-              }
-              console.warn(
-                "Unable to parse TDAS response for more precise journey time. Falling back.",
-              );
-              const [hh, mm] = eta.split(":").map((v: string) => parseInt(v, 10));
-              return ( hh * 60 + mm ) * 60;
+          route,
+          startSeq,
+          endSeq,
+        })
+          .catch(() =>
+            fetchEstJourneyTimeBasedOnHistoricalAvgData({
+              route,
+              startSeq,
+              endSeq,
+            }),
+          )
+          .catch(() =>
+            fetch("https://tdas-api.hkemobility.gov.hk/tdas/api/route", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: payload,
+              signal,
             })
-            .catch(() => {
-              //  for any error, assume 4 minutes journey time blindly
-              return 4 * 60;
-            })
-            .then((s) => {
-              __HK_BUS_ETA_JT_CACHE__[key] = { s: s * 1.1, ts };
-              // margin for car accelerating, decelerating, and passenger picking up and dropping off
-              return s * 1.1;
-            })
-        ))
+              .then((r) => r.json())
+              .then(({ eta, distM, jSpeed }) => {
+                const speedStr = /(\d+)公里\/小時/g.exec(jSpeed)?.[1];
+                if (
+                  speedStr !== null &&
+                  speedStr !== undefined &&
+                  !isNaN(parseInt(speedStr, 10))
+                ) {
+                  // Set the speed limit as 70 km/h
+                  return (
+                    (distM / Math.min(parseInt(speedStr, 10), 70) / 1000) *
+                    60 *
+                    60
+                  );
+                }
+                console.warn(
+                  "Unable to parse TDAS response for more precise journey time. Falling back.",
+                );
+                const [hh, mm] = eta
+                  .split(":")
+                  .map((v: string) => parseInt(v, 10));
+                return (hh * 60 + mm) * 60;
+              })
+              .catch(() => {
+                //  for any error, assume 4 minutes journey time blindly
+                return 4 * 60;
+              })
+              .then((s) => {
+                __HK_BUS_ETA_JT_CACHE__[key] = { s: s * 1.1, ts };
+                // margin for car accelerating, decelerating, and passenger picking up and dropping off
+                return s * 1.1;
+              }),
+          );
       }),
     );
     seconds.forEach((s) => {
