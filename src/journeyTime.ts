@@ -25,8 +25,8 @@ async function fetchEstJourneyTimeBasedOnHistoricalData({
     const start = Object.values(route.stops)[0][startSeq];
     const end = Object.values(route.stops)[0][endSeq];
     const day =
-      parseInt(formatInTimeZone(new Date(), "Asia/Hong_Koong", "i"), 10) - 1;
-    const hour = formatInTimeZone(new Date(), "Asia/Hong_Koong", "HH");
+      parseInt(formatInTimeZone(new Date(), "Asia/Hong_Kong", "i"), 10) - 1;
+    const hour = formatInTimeZone(new Date(), "Asia/Hong_Kong", "HH");
     requests.push(
       fetch(
         `https://raw.githubusercontent.com/HK-Bus-ETA/hk-bus-time-between-stops/refs/heads/pages/times_hourly/${day}/${hour}/${start.slice(0, 2)}.json`,
