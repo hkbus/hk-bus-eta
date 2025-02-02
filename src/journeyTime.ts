@@ -29,7 +29,7 @@ async function fetchEstJourneyTimeBasedOnHistoricalData({
     const hour = formatInTimeZone(new Date(), "Asia/Hong_Koong", "HH");
     requests.push(
       fetch(
-        `https://raw.githubusercontent.com/HK-Bus-ETA/hk-bus-time-between-stops/refs/heads/pages/times_hourly/${day}/${hour}/${start.slice(0, 2)}.json`,
+        `https://timeinterval.hkbuseta.com/times_hourly/${day}/${hour}/${start.slice(0, 2)}.json`,
       )
         .then((r) => r.json())
         .then((r) => {
@@ -60,7 +60,7 @@ async function fetchEstJourneyTimeBasedOnHistoricalAvgData({
     const end = Object.values(route.stops)[0][endSeq];
     requests.push(
       fetch(
-        `https://raw.githubusercontent.com/HK-Bus-ETA/hk-bus-time-between-stops/refs/heads/pages/times/${start.slice(0, 2)}.json`,
+        `https://timeinterval.hkbuseta.com/times/${start.slice(0, 2)}.json`,
       )
         .then((r) => r.json())
         .then((r) => {
