@@ -20,6 +20,14 @@ export default function fetchEtas({
       cache: isSafari ? "default" : "no-store",
     },
   )
+    .catch(() => (
+      fetch(
+        `https://mtr.hkbus.app/?line=${route}&sta=${stopId}`,
+        {
+          cache: isSafari ? "default" : "no-store",
+        },  
+      )
+    ))
     .then((response) => response.json())
     .then(({ data, status }) =>
       status === 0
