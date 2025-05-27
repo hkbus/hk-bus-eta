@@ -29,48 +29,28 @@ export default function fetchEtas({
       )
     ))
     .then((response) => response.json())
-    .then(({ data, message, status, url }) => {
-      if (status === 0) {
-        if (message && typeof message === "string") {
-          const message2 = message
-            .replace("Please click here for more information.", "")
-            .trim();
-          return [
-            {
-              eta: null,
-              remark: {
-                zh: message2,
-                en: message2,
+    .then(({ data, status }) =>
+      status === 0
+        ? []
+        : data[`${route}-${stopId}`][
+            bound.endsWith("UT") ? "UP" : "DOWN"
+          ].reduce(
+            (acc: Eta[], { time, plat, dest }: any) => [
+              ...acc,
+              {
+                eta: time.replace(" ", "T") + "+08:00",
+                remark: {
+                  zh: `${plat}號月台`,
+                  en: `Platform ${plat}`,
+                },
+                dest: {
+                  zh: stopList[dest].name.zh,
+                  en: stopList[dest].name.en,
+                },
+                co: "mtr",
               },
-              dest: {
-                zh: "",
-                en: "",
-              },
-              co: "mtr",
-            },
-          ];
-        }
-        return [];
-      }
-      return data[`${route}-${stopId}`][
-        bound.endsWith("UT") ? "UP" : "DOWN"
-      ].reduce(
-        (acc: Eta[], { time, plat, dest }: any) => [
-          ...acc,
-          {
-            eta: time.replace(" ", "T") + "+08:00",
-            remark: {
-              zh: `${plat}號月台`,
-              en: `Platform ${plat}`,
-            },
-            dest: {
-              zh: stopList[dest].name.zh,
-              en: stopList[dest].name.en,
-            },
-            co: "mtr",
-          },
-        ],
-        []
-      );
-    });
+            ],
+            [],
+          ),
+    );
 }
