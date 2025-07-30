@@ -166,6 +166,8 @@ fetchEtas({
   stopList: busDb.stopList,
   seq: ${t},
   language: "${n}",
+  holidays: busDb.holidays,
+  serviceDayMap: busDb.serviceDayMap,
 }).then(etas => {
   console.log(etas)
 })
