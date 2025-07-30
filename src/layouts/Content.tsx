@@ -66,7 +66,7 @@ const Content = () => {
           </Box>
           <Box sx={{ flex: 1, my: 1 }}>
             <JsonView
-              // @ts-ignore
+              // @ts-expect-error casting issue
               data={db ?? null}
               shouldInitiallyExpand={(lv) => lv < 1}
               style={{
@@ -222,6 +222,8 @@ fetchEtas({
   stopList: busDb.stopList,
   seq: ${seq},
   language: "${language}",
+  holidays: busDb.holidays,
+  serviceDayMap: busDb.serviceDayMap,
 }).then(etas => {
   console.log(etas)
 })
