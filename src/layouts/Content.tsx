@@ -199,9 +199,9 @@ const detailSx: SxProps<Theme> = {
 };
 
 const fetchEtaDbCode = `import { fetchEtaDb } from "hk-bus-eta";
-import type { BusDb } from "hk-bus-eta";
+import type { EtaDb } from "hk-bus-eta";
 
-fetchEtaDb().then((db: BusDb) => {
+fetchEtaDb().then((db: EtaDb) => {
   console.log(db)
 })`;
 
@@ -215,7 +215,7 @@ const getFetchEtasCode = (routeId: string, seq: number, language: string) =>
   `import { fetchEtas } from "hk-bus-eta";
 import type { Eta } from "hk-bus-eta";
 
-// busDb is the BusDb object fetched by fetchEtaDb
+// etaDb is the EtaDb object fetched by fetchEtaDb
 
 fetchEtas({
   ...busDb.routeList["${routeId}"],
