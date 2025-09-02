@@ -29,7 +29,7 @@ export default function fetchEtas({
       )
     ))
     .then((response) => response.json())
-    .then(({ data, message, status, url }) => {
+    .then(({ data, message, status, url }): Eta[] => {
       if (status === 0) {
         if (message && typeof message === "string") {
           const message2 = message
@@ -37,7 +37,7 @@ export default function fetchEtas({
             .trim();
           return [
             {
-              eta: null,
+              eta: "",
               remark: {
                 zh: message2,
                 en: message2,

@@ -21,13 +21,13 @@ export default function fetchEtas({
     },
   )
     .then((response) => response.json())
-    .then(({ platform_list }) => {
+    .then(({ platform_list }): Eta[] => {
       if (
         platform_list.every(({ end_service_status }: any) => end_service_status)
       ) {
         return [
           {
-            eta: null,
+            eta: "",
             remark: {
               zh: "此站今日服務已經終止",
               en: "This stop's service for today has ended",

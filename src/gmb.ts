@@ -21,7 +21,7 @@ export default function fetchEtas({
     },
   )
     .then((response) => response.json())
-    .then(({ data }) =>
+    .then(({ data }): Eta[] =>
       data
         .filter(
           ({ route_seq }: any) =>
@@ -52,7 +52,7 @@ export default function fetchEtas({
                 })
               : [
                   {
-                    eta: null,
+                    eta: "",
                     remark: {
                       zh: description_tc ?? "",
                       en: description_en ?? "",
