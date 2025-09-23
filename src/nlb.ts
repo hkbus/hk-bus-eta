@@ -11,17 +11,8 @@ export default function fetchEtas({
   nlbId,
 }: fetchEtasProps): Promise<Eta[]> {
   return fetch(
-    `https://rt.data.gov.hk/v1/transport/nlb/stop.php?action=estimatedArrivals`,
+    `https://rt.data.gov.hk/v2/transport/nlb/stop.php?action=estimatedArrivals&routeId=${nlbId}&stopId=${stopId}&language=zh`,
     {
-      body: JSON.stringify({
-        routeId: nlbId,
-        stopId,
-        language: "zh",
-      }),
-      headers: {
-        "Content-Type": "text/plain",
-      },
-      method: "POST",
       cache: isSafari ? "default" : "no-store",
     },
   )
