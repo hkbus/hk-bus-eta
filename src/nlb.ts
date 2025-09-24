@@ -19,7 +19,6 @@ export default function fetchEtas({
     },
   )
     .then((response) => response.json())
-    .then(({ estimatedArrivals }) => {
     .then(({ estimatedArrivals, message }) => {
       const outputs = (estimatedArrivals ?? [])
         .filter((eta: any) => eta.estimatedArrivalTime)
