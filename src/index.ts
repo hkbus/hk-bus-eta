@@ -54,7 +54,7 @@ export async function fetchEtas({
           await ctb({ stopId: stops.ctb[seq], route, bound: bound.ctb, seq }),
         );
       } else if (company_id === "nlb" && stops.nlb) {
-        _etas = _etas.concat(await nlb({ stopId: stops.nlb[seq], nlbId }));
+        _etas = _etas.concat(await nlb({ stopId: stops.nlb[seq], nlbId, language }));
       } else if (company_id === "lrtfeeder" && stops.lrtfeeder) {
         _etas = _etas.concat(
           await lrtfeeder({ stopId: stops.lrtfeeder[seq], route, language }),
