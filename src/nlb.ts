@@ -20,9 +20,8 @@ export default function fetchEtas({
   )
     .then((response) => response.json())
     .then(({ estimatedArrivals }) => {
-      if (!estimatedArrivals) return [];
-
-      return estimatedArrivals
+    .then(({ estimatedArrivals, message }) => {
+      const outputs = (estimatedArrivals ?? [])
         .filter((eta: any) => eta.estimatedArrivalTime)
         .map((e: any) => {
           const isScheduled = e.departed !== "1" || e.noGPS === "1";
@@ -40,5 +39,25 @@ export default function fetchEtas({
             co: "nlb",
           };
         });
+
+      if (outputs.length === 0) {
+        if (message && typeof message === "string") {
+          return [
+            {
+              eta: "",
+              remark: {
+                [language]: message,
+              },
+              dest: {
+                zh: "",
+                en: "",
+              },
+              co: "nlb",
+            },
+          ];
+        }
+      }
+
+      return outputs;
     });
 }
