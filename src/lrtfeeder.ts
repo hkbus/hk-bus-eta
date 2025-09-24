@@ -24,8 +24,29 @@ export default function fetchEtas({
     }),
   })
     .then((response) => response.json())
-    .then(({ busStop }) =>
-      busStop
+    .then(({ busStop, routeStatusRemarkTitle }) => {
+      if (busStop.length === 0) {
+        if (
+          routeStatusRemarkTitle &&
+          typeof routeStatusRemarkTitle === "string"
+        ) {
+          return [
+            {
+              eta: "",
+              remark: {
+                [language]: routeStatusRemarkTitle,
+              },
+              dest: {
+                zh: "",
+                en: "",
+              },
+              co: "lrtfeeder",
+            },
+          ];
+        }
+      }
+
+      return busStop
         .filter(({ busStopId }: any) => busStopId === stopId)
         .reduce(
           (ret: any, { bus: buses }: any) => [
@@ -75,6 +96,6 @@ export default function fetchEtas({
             }, []),
           ],
           [],
-        ),
-    );
+        );
+    });
 }
