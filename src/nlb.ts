@@ -4,14 +4,16 @@ import { isSafari } from "./utils";
 interface fetchEtasProps {
   stopId: string;
   nlbId: RouteListEntry["nlbId"];
+  language: "zh" | "en";
 }
 
 export default function fetchEtas({
   stopId,
   nlbId,
+  language,
 }: fetchEtasProps): Promise<Eta[]> {
   return fetch(
-    `https://rt.data.gov.hk/v2/transport/nlb/stop.php?action=estimatedArrivals&routeId=${nlbId}&stopId=${stopId}&language=zh`,
+    `https://rt.data.gov.hk/v2/transport/nlb/stop.php?action=estimatedArrivals&routeId=${nlbId}&stopId=${stopId}&language=${language}`,
     {
       cache: isSafari ? "default" : "no-store",
     },
@@ -29,8 +31,9 @@ export default function fetchEtas({
             en: "",
           },
           dest: {
-            zh: "",
-            en: "",
+            // e.g. 經: 梅窩舊墟
+            // e.g. Via: Mui Wo Old Town
+            [language]: e.routeVariantName,
           },
           co: "nlb",
         }));
