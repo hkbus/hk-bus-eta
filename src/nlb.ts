@@ -24,18 +24,21 @@ export default function fetchEtas({
 
       return estimatedArrivals
         .filter((eta: any) => eta.estimatedArrivalTime)
-        .map((e: any) => ({
-          eta: e.estimatedArrivalTime.replace(" ", "T") + ".000+08:00",
-          remark: {
-            zh: "",
-            en: "",
-          },
-          dest: {
-            // e.g. 經: 梅窩舊墟
-            // e.g. Via: Mui Wo Old Town
-            [language]: e.routeVariantName,
-          },
-          co: "nlb",
-        }));
+        .map((e: any) => {
+          const isScheduled = e.departed !== "1" || e.noGPS === "1";
+          return {
+            eta: e.estimatedArrivalTime.replace(" ", "T") + ".000+08:00",
+            remark: {
+              zh: isScheduled ? "預定班次" : "",
+              en: isScheduled ? "Scheduled" : "",
+            },
+            dest: {
+              // e.g. 經: 梅窩舊墟
+              // e.g. Via: Mui Wo Old Town
+              [language]: e.routeVariantName,
+            },
+            co: "nlb",
+          };
+        });
     });
 }
