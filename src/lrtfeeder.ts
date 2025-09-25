@@ -78,13 +78,8 @@ export default function fetchEtas({
                       -2,
                     )}:${`0${etaDate.getSeconds()}`.slice(-2)}+08:00`,
                   remark: {
-                    [language]:
-                      bus.busRemark ||
-                      (bus.isScheduled === "1"
-                        ? language === "en"
-                          ? "Scheduled"
-                          : "預定班次"
-                        : ""),
+                    zh: bus.busRemark || (bus.isScheduled === "1" ? "預定班次" : ""),
+                    en: bus.busRemark || (bus.isScheduled === "1" ? "Scheduled" : ""),
                   },
                   dest: {
                     zh: "",

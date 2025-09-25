@@ -33,7 +33,8 @@ export default function fetchEtas({
             dest: {
               // e.g. 經: 梅窩舊墟
               // e.g. Via: Mui Wo Old Town
-              [language]: e.routeVariantName,
+              zh: language === "zh" ? e.routeVariantName : "",
+              en: language === "en" ? e.routeVariantName : "",
             },
             co: "nlb",
           };
@@ -45,7 +46,8 @@ export default function fetchEtas({
             {
               eta: "",
               remark: {
-                [language]: message,
+                zh: language === "zh" ? message : "",
+                en: language === "en" ? message : "",
               },
               dest: {
                 zh: "",
