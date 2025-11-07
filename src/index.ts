@@ -93,7 +93,14 @@ export async function fetchEtas({
         );
       } else if (company_id === "hkkf" && stops.hkkf) {
         _etas = _etas.concat(
-          await hkkf({ freq, seq, holidays, serviceDayMap }),
+          await hkkf({
+            route,
+            bound: bound.hkkf,
+            freq,
+            seq,
+            holidays,
+            serviceDayMap,
+          })
         );
       }
     }
