@@ -29,7 +29,7 @@ export default function fetchEtas({
           zh: "",
           en: "",
         },
-        co: "fortuneferry",
+        co: "hkkf",
       })),
   );
   /*
