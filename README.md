@@ -19,28 +19,29 @@ or
 
 __Crawling traffic database:__
 ```ts
-import { fetchEtaObj } from "hk-bus-eta";
-import type { BusDb } from "hk-bus-eta";
+import { fetchEtaDb } from "hk-bus-eta";
+import type { EtaDb } from "hk-bus-eta";
 
-fetchEtaDb().then((db: BusDb) => {
+(async function () {
+  const etaDb: EtaDb = await fetchEtaDb();
   console.log(db)
-})
+})();
 ```
 
 __Crawling ETA__
 ```ts
 import { fetchEtas } from "hk-bus-eta";
-import tyep { Eta } from "hk-bus-eta";
+import type { Eta } from "hk-bus-eta";
 
-// busDb is the BusDb object fetched by fetchEtaObj
-
-fetchEtas({
-  ...busDb.routeList["1+1+CHUK YUEN ESTATE+STAR FERRY"],
-  seq: 0,
-  language: "en",
-}).then(etas => {
-  console.log(etas)
-})
+(async function () {
+  // etaDb is the EtaDb object fetched by fetchEtaObj
+  const etas: Eta[] = await fetchEtas({
+    ...etaDb.routeList["1+1+CHUK YUEN ESTATE+STAR FERRY"],
+    seq: 0,
+    language: "en",
+  });
+  console.log(etas);
+})();
 ```
 
 ## Data Structure
