@@ -11,10 +11,19 @@ import hkkf from "./hkkf";
 import { RouteListEntry, EtaDb, Eta, StopList } from "./type";
 
 interface fetchEtasProps extends RouteListEntry {
-  stopList: StopList;
-  holidays: EtaDb["holidays"];
-  serviceDayMap: EtaDb["serviceDayMap"];
+  // For mtr and fortuneferry query. Optional
+  stopList?: StopList;
+
+  // For fortuneferry, sunferry, hkkf query. Optional
+  holidays?: EtaDb["holidays"];
+
+  // For fortuneferry, sunferry, hkkf query. Optional
+  serviceDayMap?: EtaDb["serviceDayMap"];
+
+  // Language for the output ETA
   language: "zh" | "en";
+
+  // Sequence number of the stop in the stops array
   seq: number;
 }
 
@@ -68,6 +77,9 @@ export async function fetchEtas({
           await lightrail({ stopId: stops.lightRail[seq], route, dest }),
         );
       } else if (company_id === "mtr" && stops.mtr) {
+        if (!stopList) {
+          throw new Error("mtr requires stopList");
+        }
         _etas = _etas.concat(
           await mtr({
             stopId: stops.mtr[seq],
@@ -77,6 +89,15 @@ export async function fetchEtas({
           }),
         );
       } else if (company_id === "fortuneferry" && stops.fortuneferry) {
+        if (!stopList) {
+          throw new Error("fortuneferry requires stopList");
+        }
+        if (!serviceDayMap) {
+          throw new Error("fortuneferry requires serviceDayMap");
+        }
+        if (!holidays) {
+          throw new Error("fortuneferry requires holidays");
+        }
         _etas = _etas.concat(
           await fortuneferry({
             stops,
@@ -88,10 +109,22 @@ export async function fetchEtas({
           }),
         );
       } else if (company_id === "sunferry" && stops.sunferry) {
+        if (!serviceDayMap) {
+          throw new Error("sunferry requires serviceDayMap");
+        }
+        if (!holidays) {
+          throw new Error("sunferry requires holidays");
+        }
         _etas = _etas.concat(
           await sunferry({ route, seq, holidays, serviceDayMap, freq }),
         );
       } else if (company_id === "hkkf" && stops.hkkf) {
+        if (!serviceDayMap) {
+          throw new Error("hkkf requires serviceDayMap");
+        }
+        if (!holidays) {
+          throw new Error("hkkf requires holidays");
+        }
         _etas = _etas.concat(
           await hkkf({
             route,
