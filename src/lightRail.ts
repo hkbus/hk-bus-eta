@@ -13,9 +13,7 @@ export default function fetchEtas({
   dest,
 }: fetchEtasProps): Promise<Eta[]> {
   return fetch(
-    `https://rt.data.gov.hk/v1/transport/mtr/lrt/getSchedule?station_id=${stopId.slice(
-      2,
-    )}`,
+    `https://rt.data.gov.hk/v1/transport/mtr/lrt/getSchedule?station_id=${stopId.slice(2,)}&with_special=1`,
     {
       cache: isSafari ? "default" : "no-store",
     },
