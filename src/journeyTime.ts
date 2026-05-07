@@ -21,12 +21,15 @@ async function fetchEstJourneyTimeBasedOnHistoricalData({
   endSeq: number;
 }): Promise<number> {
   const requests = [];
+  const stops = Object.values(route.stops)[0];
+
   for (let i = startSeq; i < endSeq; ++i) {
-    const start = Object.values(route.stops)[0][startSeq];
-    const end = Object.values(route.stops)[0][endSeq];
+    const start = stops[i];
+    const end = stops[i + 1];
     const day =
       parseInt(formatInTimeZone(new Date(), "Asia/Hong_Kong", "i"), 10) - 1;
     const hour = formatInTimeZone(new Date(), "Asia/Hong_Kong", "HH");
+
     requests.push(
       fetch(
         `https://raw.githubusercontent.com/HK-Bus-ETA/hk-bus-time-between-stops/refs/heads/pages/times_hourly/${day}/${hour}/${start.slice(0, 2)}.json`,
@@ -40,6 +43,7 @@ async function fetchEstJourneyTimeBasedOnHistoricalData({
         }),
     );
   }
+
   return Promise.all(requests).then((seconds) =>
     Math.ceil(seconds.reduce((acc, cur) => acc + cur, 0) / 60),
   );
@@ -55,9 +59,12 @@ async function fetchEstJourneyTimeBasedOnHistoricalAvgData({
   endSeq: number;
 }): Promise<number> {
   const requests = [];
+  const stops = Object.values(route.stops)[0];
+
   for (let i = startSeq; i < endSeq; ++i) {
-    const start = Object.values(route.stops)[0][startSeq];
-    const end = Object.values(route.stops)[0][endSeq];
+    const start = stops[i];
+    const end = stops[i + 1];
+
     requests.push(
       fetch(
         `https://raw.githubusercontent.com/HK-Bus-ETA/hk-bus-time-between-stops/refs/heads/pages/times/${start.slice(0, 2)}.json`,
@@ -71,6 +78,7 @@ async function fetchEstJourneyTimeBasedOnHistoricalAvgData({
         }),
     );
   }
+
   return Promise.all(requests).then((seconds) =>
     Math.ceil(seconds.reduce((acc, cur) => acc + cur, 0) / 60),
   );
