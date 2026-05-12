@@ -44,50 +44,37 @@ export async function fetchEtas({
   serviceDayMap,
 }: fetchEtasProps): Promise<Eta[]> {
   try {
-    let _etas: Eta[] = [];
-    for (const company_id of co) {
+    const tasks = co.map(async (company_id): Promise<Eta[]> => {
       if (company_id === "kmb" && stops.kmb) {
-        _etas = _etas.concat(
-          await kmb({
-            route,
-            stops: stops.kmb,
-            stopId: stops.kmb[seq],
-            seq,
-            co,
-            serviceType,
-            bound: bound.kmb,
-          }),
-        );
+        return kmb({
+          route,
+          stops: stops.kmb,
+          stopId: stops.kmb[seq],
+          seq,
+          co,
+          serviceType,
+          bound: bound.kmb,
+        });
       } else if (company_id === "ctb" && stops.ctb) {
-        _etas = _etas.concat(
-          await ctb({ stopId: stops.ctb[seq], route, bound: bound.ctb, seq }),
-        );
+        return ctb({ stopId: stops.ctb[seq], route, bound: bound.ctb, seq });
       } else if (company_id === "nlb" && stops.nlb) {
-        _etas = _etas.concat(await nlb({ stopId: stops.nlb[seq], nlbId, language }));
+        return nlb({ stopId: stops.nlb[seq], nlbId, language });
       } else if (company_id === "lrtfeeder" && stops.lrtfeeder) {
-        _etas = _etas.concat(
-          await lrtfeeder({ stopId: stops.lrtfeeder[seq], route, language }),
-        );
+        return lrtfeeder({ stopId: stops.lrtfeeder[seq], route, language });
       } else if (company_id === "gmb" && stops.gmb) {
-        _etas = _etas.concat(
-          await gmb({ stopId: stops.gmb[seq], gtfsId, seq, bound: bound.gmb }),
-        );
+        return gmb({ stopId: stops.gmb[seq], gtfsId, seq, bound: bound.gmb });
       } else if (company_id === "lightRail" && stops.lightRail) {
-        _etas = _etas.concat(
-          await lightrail({ stopId: stops.lightRail[seq], route, dest }),
-        );
+        return lightrail({ stopId: stops.lightRail[seq], route, dest });
       } else if (company_id === "mtr" && stops.mtr) {
         if (!stopList) {
           throw new Error("mtr requires stopList");
         }
-        _etas = _etas.concat(
-          await mtr({
-            stopId: stops.mtr[seq],
-            route,
-            stopList,
-            bound: bound.mtr,
-          }),
-        );
+        return mtr({
+          stopId: stops.mtr[seq],
+          route,
+          stopList,
+          bound: bound.mtr,
+        });
       } else if (company_id === "fortuneferry" && stops.fortuneferry) {
         if (!stopList) {
           throw new Error("fortuneferry requires stopList");
@@ -98,16 +85,14 @@ export async function fetchEtas({
         if (!holidays) {
           throw new Error("fortuneferry requires holidays");
         }
-        _etas = _etas.concat(
-          await fortuneferry({
-            stops,
-            seq,
-            stopList,
-            freq,
-            serviceDayMap,
-            holidays,
-          }),
-        );
+        return fortuneferry({
+          stops,
+          seq,
+          stopList,
+          freq,
+          serviceDayMap,
+          holidays,
+        });
       } else if (company_id === "sunferry" && stops.sunferry) {
         if (!serviceDayMap) {
           throw new Error("sunferry requires serviceDayMap");
@@ -115,9 +100,7 @@ export async function fetchEtas({
         if (!holidays) {
           throw new Error("sunferry requires holidays");
         }
-        _etas = _etas.concat(
-          await sunferry({ route, seq, holidays, serviceDayMap, freq }),
-        );
+        return sunferry({ route, seq, holidays, serviceDayMap, freq });
       } else if (company_id === "hkkf" && stops.hkkf) {
         if (!serviceDayMap) {
           throw new Error("hkkf requires serviceDayMap");
@@ -125,16 +108,27 @@ export async function fetchEtas({
         if (!holidays) {
           throw new Error("hkkf requires holidays");
         }
-        _etas = _etas.concat(
-          await hkkf({
-            route,
-            bound: bound.hkkf,
-            freq,
-            seq,
-            holidays,
-            serviceDayMap,
-          })
-        );
+        return hkkf({
+          route,
+          bound: bound.hkkf,
+          freq,
+          seq,
+          holidays,
+          serviceDayMap,
+        });
+      }
+
+      return [];
+    });
+
+    const settled = await Promise.allSettled(tasks);
+
+    let _etas: Eta[] = [];
+    for (const result of settled) {
+      if (result.status === "fulfilled") {
+        _etas = _etas.concat(result.value);
+      } else {
+        console.error(result.reason);
       }
     }
 
