@@ -6,7 +6,7 @@ A Python version package is available [here](https://pypi.org/project/hk-bus-eta
 
 ## Demo
 
-Live demo is available [here](https://hk-bus-eta.chunlaw.io/).
+Live demo is available [here](https://hk-bus-eta.hkbus.app/).
 
 ## Install
 
