@@ -49,7 +49,7 @@ export default function fetchEtas({
       return busStop
         .filter(({ busStopId }: any) => busStopId === stopId)
         .reduce(
-          (ret: any, { bus: buses }: any) => [
+          (ret: any, { bus: buses, busStopRemark }: any) => [
             ...ret,
             ...buses.reduce((etas: Eta[], bus: any) => {
               // hackily use +8 hours and use UTC hour to resolve timezone issue
@@ -78,8 +78,8 @@ export default function fetchEtas({
                       -2,
                     )}:${`0${etaDate.getSeconds()}`.slice(-2)}+08:00`,
                   remark: {
-                    zh: bus.busRemark || (bus.isScheduled === "1" ? "預定班次" : ""),
-                    en: bus.busRemark || (bus.isScheduled === "1" ? "Scheduled" : ""),
+                    zh: busStopRemark || bus.busRemark || (bus.isScheduled === "1" ? "預定班次" : ""),
+                    en: busStopRemark || bus.busRemark || (bus.isScheduled === "1" ? "Scheduled" : ""),
                   },
                   dest: {
                     zh: "",
