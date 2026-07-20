@@ -1,0 +1,300 @@
+{
+  "appRefreshTimeInSecond": "60",
+  "busStop": [
+    {
+      "bus": [
+        {
+          "arrivalTimeInSecond": "108000",
+          "arrivalTimeText": "",
+          "busId": "376",
+          "busLocation": {
+            "latitude": 0,
+            "longitude": 0
+          },
+          "busRemark": null,
+          "departureTimeInSecond": "1008",
+          "departureTimeText": "16 minutes",
+          "isDelayed": "0",
+          "isScheduled": "1",
+          "lineRef": "K18_TPMS"
+        },
+        {
+          "arrivalTimeInSecond": "108000",
+          "arrivalTimeText": "",
+          "busId": "376",
+          "busLocation": {
+            "latitude": 0,
+            "longitude": 0
+          },
+          "busRemark": null,
+          "departureTimeInSecond": "2208",
+          "departureTimeText": "36 minutes",
+          "isDelayed": "0",
+          "isScheduled": "1",
+          "lineRef": "K18_TPMS"
+        }
+      ],
+      "busIcon": null,
+      "busStopId": "K18-D010",
+      "busStopRemark": null,
+      "busStopStatus": null,
+      "busStopStatusRemarkContent": null,
+      "busStopStatusRemarkTitle": null,
+      "busStopStatusTime": null,
+      "isSuspended": "0"
+    },
+    {
+      "bus": [
+        {
+          "arrivalTimeInSecond": "0",
+          "arrivalTimeText": "Arriving / Departed",
+          "busId": "376",
+          "busLocation": {
+            "latitude": 22.443822166666671,
+            "longitude": 114.16997333333332
+          },
+          "busRemark": null,
+          "departureTimeInSecond": "-13",
+          "departureTimeText": "Departing / Departed",
+          "isDelayed": "0",
+          "isScheduled": "0",
+          "lineRef": "K18_TPMS"
+        },
+        {
+          "arrivalTimeInSecond": "1242",
+          "arrivalTimeText": "20 minutes",
+          "busId": "376",
+          "busLocation": {
+            "latitude": 0,
+            "longitude": 0
+          },
+          "busRemark": null,
+          "departureTimeInSecond": "1276",
+          "departureTimeText": "21 minutes",
+          "isDelayed": "0",
+          "isScheduled": "1",
+          "lineRef": "K18_TPMS"
+        },
+        {
+          "arrivalTimeInSecond": "2442",
+          "arrivalTimeText": "40 minutes",
+          "busId": "376",
+          "busLocation": {
+            "latitude": 0,
+            "longitude": 0
+          },
+          "busRemark": null,
+          "departureTimeInSecond": "2476",
+          "departureTimeText": "41 minutes",
+          "isDelayed": "0",
+          "isScheduled": "1",
+          "lineRef": "K18_TPMS"
+        }
+      ],
+      "busIcon": "1",
+      "busStopId": "K18-D020",
+      "busStopRemark": null,
+      "busStopStatus": null,
+      "busStopStatusRemarkContent": null,
+      "busStopStatusRemarkTitle": null,
+      "busStopStatusTime": null,
+      "isSuspended": "0"
+    },
+    {
+      "bus": [
+        {
+          "arrivalTimeInSecond": "0",
+          "arrivalTimeText": "Arriving / Departed",
+          "busId": "376",
+          "busLocation": {
+            "latitude": 22.443822166666671,
+            "longitude": 114.16997333333332
+          },
+          "busRemark": null,
+          "departureTimeInSecond": "-13",
+          "departureTimeText": "Departing / Departed",
+          "isDelayed": "0",
+          "isScheduled": "0",
+          "lineRef": "K18_TPMS"
+        },
+        {
+          "arrivalTimeInSecond": "1276",
+          "arrivalTimeText": "21 minutes",
+          "busId": "376",
+          "busLocation": {
+            "latitude": 0,
+            "longitude": 0
+          },
+          "busRemark": null,
+          "departureTimeInSecond": "0",
+          "departureTimeText": "Departing / Departed",
+          "isDelayed": "0",
+          "isScheduled": "1",
+          "lineRef": "K18_TPMS"
+        },
+        {
+          "arrivalTimeInSecond": "2476",
+          "arrivalTimeText": "41 minutes",
+          "busId": "376",
+          "busLocation": {
+            "latitude": 0,
+            "longitude": 0
+          },
+          "busRemark": null,
+          "departureTimeInSecond": "0",
+          "departureTimeText": "Departing / Departed",
+          "isDelayed": "0",
+          "isScheduled": "1",
+          "lineRef": "K18_TPMS"
+        }
+      ],
+      "busIcon": null,
+      "busStopId": "K18-D030",
+      "busStopRemark": null,
+      "busStopStatus": null,
+      "busStopStatusRemarkContent": null,
+      "busStopStatusRemarkTitle": null,
+      "busStopStatusTime": null,
+      "isSuspended": "0"
+    },
+    {
+      "bus": [
+        {
+          "arrivalTimeInSecond": "108000",
+          "arrivalTimeText": "",
+          "busId": "376",
+          "busLocation": {
+            "latitude": 0,
+            "longitude": 0
+          },
+          "busRemark": null,
+          "departureTimeInSecond": "408",
+          "departureTimeText": "6 minutes",
+          "isDelayed": "0",
+          "isScheduled": "1",
+          "lineRef": "K18_KF"
+        },
+        {
+          "arrivalTimeInSecond": "108000",
+          "arrivalTimeText": "",
+          "busId": "376",
+          "busLocation": {
+            "latitude": 0,
+            "longitude": 0
+          },
+          "busRemark": null,
+          "departureTimeInSecond": "1608",
+          "departureTimeText": "26 minutes",
+          "isDelayed": "0",
+          "isScheduled": "1",
+          "lineRef": "K18_KF"
+        }
+      ],
+      "busIcon": null,
+      "busStopId": "K18-U010",
+      "busStopRemark": null,
+      "busStopStatus": null,
+      "busStopStatusRemarkContent": null,
+      "busStopStatusRemarkTitle": null,
+      "busStopStatusTime": null,
+      "isSuspended": "0"
+    },
+    {
+      "bus": [
+        {
+          "arrivalTimeInSecond": "634",
+          "arrivalTimeText": "10 minutes",
+          "busId": "376",
+          "busLocation": {
+            "latitude": 0,
+            "longitude": 0
+          },
+          "busRemark": null,
+          "departureTimeInSecond": "646",
+          "departureTimeText": "10 minutes",
+          "isDelayed": "0",
+          "isScheduled": "1",
+          "lineRef": "K18_KF"
+        },
+        {
+          "arrivalTimeInSecond": "1834",
+          "arrivalTimeText": "30 minutes",
+          "busId": "376",
+          "busLocation": {
+            "latitude": 0,
+            "longitude": 0
+          },
+          "busRemark": null,
+          "departureTimeInSecond": "1846",
+          "departureTimeText": "30 minutes",
+          "isDelayed": "0",
+          "isScheduled": "1",
+          "lineRef": "K18_KF"
+        }
+      ],
+      "busIcon": null,
+      "busStopId": "K18-U020",
+      "busStopRemark": "Service from this stop temporarily suspended or bus stop relocated.  Please call the MTR Hotline 2881 8888 for information",
+      "busStopStatus": null,
+      "busStopStatusRemarkContent": null,
+      "busStopStatusRemarkTitle": null,
+      "busStopStatusTime": null,
+      "isSuspended": "1"
+    },
+    {
+      "bus": [
+        {
+          "arrivalTimeInSecond": "664",
+          "arrivalTimeText": "11 minutes",
+          "busId": "376",
+          "busLocation": {
+            "latitude": 0,
+            "longitude": 0
+          },
+          "busRemark": null,
+          "departureTimeInSecond": "0",
+          "departureTimeText": "Departing / Departed",
+          "isDelayed": "0",
+          "isScheduled": "1",
+          "lineRef": "K18_KF"
+        },
+        {
+          "arrivalTimeInSecond": "1864",
+          "arrivalTimeText": "31 minutes",
+          "busId": "376",
+          "busLocation": {
+            "latitude": 0,
+            "longitude": 0
+          },
+          "busRemark": null,
+          "departureTimeInSecond": "0",
+          "departureTimeText": "Departing / Departed",
+          "isDelayed": "0",
+          "isScheduled": "1",
+          "lineRef": "K18_KF"
+        }
+      ],
+      "busIcon": null,
+      "busStopId": "K18-U030",
+      "busStopRemark": "Service from this stop temporarily suspended or bus stop relocated.  Please call the MTR Hotline 2881 8888 for information",
+      "busStopStatus": null,
+      "busStopStatusRemarkContent": null,
+      "busStopStatusRemarkTitle": null,
+      "busStopStatusTime": null,
+      "isSuspended": "1"
+    }
+  ],
+  "caseNumber": 0,
+  "caseNumberDetail": "",
+  "footerRemarks": "System testing in progress.  Estimated arrival time may vary from actual arrival time.  Please allow sufficient time for travel. Scheduled and arrival times are for reference only and are subject to change without prior notice.",
+  "routeColour": "",
+  "routeName": "K18",
+  "routeStatus": "0",
+  "routeStatusColour": "black",
+  "routeStatusRemarkContent": null,
+  "routeStatusRemarkFooterRemark": "",
+  "routeStatusRemarkTitle": null,
+  "routeStatusTime": "2026/07/14 14:53",
+  "status": "0"
+}
+
