@@ -1,4 +1,4 @@
-import { RouteListEntry, StopList } from "./type";
+import { EtaDb, RouteListEntry, StopList } from "./type";
 import { formatInTimeZone } from "date-fns-tz";
 
 type JT_CACHE = Record<
@@ -11,83 +11,50 @@ type JT_CACHE = Record<
 
 const __HK_BUS_ETA_JT_CACHE__: JT_CACHE = {};
 
-async function fetchEstJourneyTimeBasedOnHistoricalData({
-  route,
-  startSeq,
-  endSeq,
+const TIME_BETWEEN_STOPS_BASE_URL =
+  "https://raw.githubusercontent.com/HK-Bus-ETA/hk-bus-time-between-stops/refs/heads/pages";
+
+// hk-bus-time-between-stops names weekday folders by Python's %w (Sunday = 0)
+// and files public holidays under 0 as well
+const getTimesHourlyPath = (holidays: string[], now: Date): string => {
+  const day = holidays.includes(
+    formatInTimeZone(now, "Asia/Hong_Kong", "yyyyMMdd"),
+  )
+    ? 0
+    : parseInt(formatInTimeZone(now, "Asia/Hong_Kong", "i"), 10) % 7;
+  const hour = formatInTimeZone(now, "Asia/Hong_Kong", "HH");
+  return `times_hourly/${day}/${hour}`;
+};
+
+function fetchSecondsBetweenStops({
+  path,
+  start,
+  end,
+  signal,
 }: {
-  route: RouteListEntry;
-  startSeq: number;
-  endSeq: number;
+  path: string;
+  start: string;
+  end: string;
+  signal?: AbortSignal | null;
 }): Promise<number> {
-  const requests = [];
-  const stops = Object.values(route.stops)[0];
-
-  for (let i = startSeq; i < endSeq; ++i) {
-    const start = stops[i];
-    const end = stops[i + 1];
-    const day =
-      parseInt(formatInTimeZone(new Date(), "Asia/Hong_Kong", "i"), 10) - 1;
-    const hour = formatInTimeZone(new Date(), "Asia/Hong_Kong", "HH");
-
-    requests.push(
-      fetch(
-        `https://raw.githubusercontent.com/HK-Bus-ETA/hk-bus-time-between-stops/refs/heads/pages/times_hourly/${day}/${hour}/${start.slice(0, 2)}.json`,
-      )
-        .then((r) => r.json())
-        .then((r) => {
-          if (r[start][end]) {
-            return r[start][end];
-          }
-          throw new Error("not found");
-        }),
-    );
-  }
-
-  return Promise.all(requests).then((seconds) =>
-    Math.ceil(seconds.reduce((acc, cur) => acc + cur, 0) / 60),
-  );
-}
-
-async function fetchEstJourneyTimeBasedOnHistoricalAvgData({
-  route,
-  startSeq,
-  endSeq,
-}: {
-  route: RouteListEntry;
-  startSeq: number;
-  endSeq: number;
-}): Promise<number> {
-  const requests = [];
-  const stops = Object.values(route.stops)[0];
-
-  for (let i = startSeq; i < endSeq; ++i) {
-    const start = stops[i];
-    const end = stops[i + 1];
-
-    requests.push(
-      fetch(
-        `https://raw.githubusercontent.com/HK-Bus-ETA/hk-bus-time-between-stops/refs/heads/pages/times/${start.slice(0, 2)}.json`,
-      )
-        .then((r) => r.json())
-        .then((r) => {
-          if (r[start][end]) {
-            return r[start][end];
-          }
-          throw new Error("not found");
-        }),
-    );
-  }
-
-  return Promise.all(requests).then((seconds) =>
-    Math.ceil(seconds.reduce((acc, cur) => acc + cur, 0) / 60),
-  );
+  return fetch(
+    `${TIME_BETWEEN_STOPS_BASE_URL}/${path}/${start.slice(0, 2)}.json`,
+    { signal },
+  )
+    .then((r) => r.json())
+    .then((r) => {
+      const seconds = r[start]?.[end];
+      if (seconds) {
+        return seconds;
+      }
+      throw new Error("not found");
+    });
 }
 
 /**
  * Fetch Journey time in minute for a route
  * @param {Object}
- * @returns {number} journey time in minute
+ * @returns {number} journey time in minute, not rounded
  */
 export async function fetchEstJourneyTime({
   route,
@@ -95,6 +62,7 @@ export async function fetchEstJourneyTime({
   startSeq,
   endSeq,
   batchSize = 4,
+  holidays = [],
   signal,
 }: {
   route: RouteListEntry;
@@ -102,6 +70,7 @@ export async function fetchEstJourneyTime({
   startSeq: number;
   endSeq: number;
   batchSize?: number;
+  holidays?: EtaDb["holidays"];
   signal?: AbortSignal | null;
 }): Promise<number> {
   const stops = Object.values(route.stops)[0];
@@ -118,7 +87,8 @@ export async function fetchEstJourneyTime({
 
   let ts = Date.now();
   let ret = 0;
-  let payloads: Array<[string, string, Record<string, number>]> = [];
+  const timesHourlyPath = getTimesHourlyPath(holidays, new Date(ts));
+  let payloads: Array<[string, string, Record<string, string>]> = [];
   for (let i = startSeq; i < endSeq; ++i) {
     payloads.push([
       `${stops[i]}-${stops[i + 1]}`,
@@ -134,16 +104,16 @@ export async function fetchEstJourneyTime({
         departIn: Math.round(ret / 15) * 15,
       }),
       {
-        startSeq: i,
-        endSeq: i + 1,
+        start: stops[i],
+        end: stops[i + 1],
       },
     ]);
     if (payloads.length < batchSize && i !== endSeq - 1) {
       // skip fetching until whole batch filled
       continue;
     }
-    const seconds = await Promise.all(
-      payloads.map(([key, payload, { startSeq, endSeq }]) => {
+    const minutes = await Promise.all(
+      payloads.map(([key, payload, { start, end }]) => {
         // load from cache if it is query within 15 minutes
         if (
           key in __HK_BUS_ETA_JT_CACHE__ &&
@@ -152,18 +122,23 @@ export async function fetchEstJourneyTime({
           return Promise.resolve(__HK_BUS_ETA_JT_CACHE__[key].s);
         }
 
-        return fetchEstJourneyTimeBasedOnHistoricalData({
-          route,
-          startSeq,
-          endSeq,
+        // sum in seconds and convert once; rounding each stop-to-stop segment
+        // up to a whole minute overestimates by ~0.5 minute per stop
+        return fetchSecondsBetweenStops({
+          path: timesHourlyPath,
+          start,
+          end,
+          signal,
         })
           .catch(() =>
-            fetchEstJourneyTimeBasedOnHistoricalAvgData({
-              route,
-              startSeq,
-              endSeq,
+            fetchSecondsBetweenStops({
+              path: "times",
+              start,
+              end,
+              signal,
             }),
           )
+          .then((seconds) => seconds / 60)
           .catch(() =>
             fetch("https://tdas-api.hkemobility.gov.hk/tdas/api/route", {
               method: "POST",
@@ -194,8 +169,11 @@ export async function fetchEstJourneyTime({
                   .map((v: string) => parseInt(v, 10));
                 return hh * 60 + mm;
               })
-              .catch(() => {
-                //  for any error, assume 4 minutes journey time blindly
+              .catch((e) => {
+                if (signal?.aborted) {
+                  throw e;
+                }
+                //  for any other error, assume 4 minutes journey time blindly
                 return 4;
               })
               .then((s) => {
@@ -206,8 +184,8 @@ export async function fetchEstJourneyTime({
           );
       }),
     );
-    seconds.forEach((s) => {
-      ret += s;
+    minutes.forEach((m) => {
+      ret += m;
     });
     payloads.length = 0;
   }
