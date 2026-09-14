@@ -64,7 +64,7 @@ The data structure of _EtaDb_ is as follows:
             faresHoliday: string[] | null,
             freq: {
                 [type: string]: {
-                    [startTime: string]: [string, string] | null
+                    [startTime: string]: [string, string, string?] | null
                 }
             } | null,
             jt: string | null,

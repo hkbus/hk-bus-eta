@@ -17,7 +17,7 @@ export type Terminal = {
 
 export type Freq = {
   [key in string]: {
-    [startTime: string]: [string, string] | null;
+    [startTime: string]: [string, string, string?] | null;
   };
 };
 
