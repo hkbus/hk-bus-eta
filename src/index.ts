@@ -132,8 +132,9 @@ export async function fetchEtas({
       }
     }
 
+    // keep fetchError sentinels, so a blocked operator is not silently dropped
     if (_etas.some((e) => e.eta)) {
-      _etas = _etas.filter((e) => e.eta);
+      _etas = _etas.filter((e) => e.eta || e.fetchError);
     }
     return _etas.sort((a, b) => {
       if (!a.eta || a.eta === "") return 1;

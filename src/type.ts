@@ -95,4 +95,6 @@ export type Eta = {
   co: Company;
   lat?: number;
   lng?: number;
+  /** The fetch failed, e.g. blocked by an ad-blocker — not "no buses". */
+  fetchError?: boolean;
 };

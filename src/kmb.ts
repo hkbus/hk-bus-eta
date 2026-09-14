@@ -27,7 +27,18 @@ export default function fetchEtas({
       cache: isSafari ? "default" : "no-store",
     },
   )
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw Object.assign(new Error(`HTTP ${response.status}`), {
+          isHttpError: true,
+        });
+      }
+      return response.json().catch(() => {
+        throw Object.assign(new Error("Invalid JSON response"), {
+          isParseError: true,
+        });
+      });
+    })
     .then(({ data }) =>
       data
         .filter((e: any) => e.dir === bound)
@@ -62,11 +73,29 @@ export default function fetchEtas({
             zh: e.dest_tc,
             en: e.dest_en,
           },
-          co: "kmb",
+          co: "kmb" as const,
         })),
     )
     .catch((err) => {
-      console.error(err);
-      return [];
+      console.error("KMB ETA fetch error:", err);
+      // a network-level failure is what an adblocker looks like; HTTP and parse
+      // errors are not
+      const isBlocked = !err?.isHttpError && !err?.isParseError;
+      return [
+        {
+          eta: "",
+          remark: {
+            zh: isBlocked
+              ? "ETA 請求被封鎖 — 請檢查廣告封鎖器"
+              : "無法載入 ETA 資料",
+            en: isBlocked
+              ? "ETA request blocked — check your ad blocker"
+              : "Unable to load ETA data",
+          },
+          dest: { zh: "", en: "" },
+          co: "kmb" as const,
+          fetchError: true,
+        },
+      ];
     });
 }
