@@ -78,7 +78,7 @@ export const getUpcomingFerry = ({
           if (serviceDayMap[serviceKey][0] === "1") {
             return acc.concat(getEta(freq[serviceKey], refDate));
           }
-        } else if (serviceDayMap[serviceKey][refDate.getDay()]) {
+        } else if (serviceDayMap[serviceKey][refDate.getDay()] === "1") {
           return acc.concat(getEta(freq[serviceKey], refDate)).sort();
         }
       }
