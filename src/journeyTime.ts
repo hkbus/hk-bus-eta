@@ -1,15 +1,10 @@
 import { EtaDb, RouteListEntry, StopList } from "./type";
 import { formatInTimeZone } from "date-fns-tz";
+import { safeFetch } from "./utils";
 
-type JT_CACHE = Record<
-  string,
-  {
-    s: number;
-    ts: number;
-  }
->;
+type JT_CACHE = Map<string, { s: number; ts: number }>;
 
-const __HK_BUS_ETA_JT_CACHE__: JT_CACHE = {};
+const __HK_BUS_ETA_JT_CACHE__: JT_CACHE = new Map();
 
 const TIME_BETWEEN_STOPS_BASE_URL =
   "https://raw.githubusercontent.com/HK-Bus-ETA/hk-bus-time-between-stops/refs/heads/pages";
@@ -37,14 +32,14 @@ function fetchSecondsBetweenStops({
   end: string;
   signal?: AbortSignal | null;
 }): Promise<number> {
-  return fetch(
+  return safeFetch(
     `${TIME_BETWEEN_STOPS_BASE_URL}/${path}/${start.slice(0, 2)}.json`,
-    { signal },
+    { signal: signal ?? undefined },
   )
     .then((r) => r.json())
     .then((r) => {
-      const seconds = r[start]?.[end];
-      if (seconds) {
+      const seconds = r?.[start]?.[end];
+      if (Number.isFinite(seconds) && seconds > 0) {
         return seconds;
       }
       throw new Error("not found");
@@ -116,10 +111,9 @@ export async function fetchEstJourneyTime({
       payloads.map(([key, payload, { start, end }]) => {
         // load from cache if it is query within 15 minutes
         if (
-          key in __HK_BUS_ETA_JT_CACHE__ &&
-          __HK_BUS_ETA_JT_CACHE__[key].ts + 15 * 60 * 1000 >= ts
+          (__HK_BUS_ETA_JT_CACHE__.get(key)?.ts ?? -Infinity) + 15 * 60 * 1000 >= ts
         ) {
-          return Promise.resolve(__HK_BUS_ETA_JT_CACHE__[key].s);
+          return Promise.resolve(__HK_BUS_ETA_JT_CACHE__.get(key)!.s);
         }
 
         // sum in seconds and convert once; rounding each stop-to-stop segment
@@ -140,7 +134,7 @@ export async function fetchEstJourneyTime({
           )
           .then((seconds) => seconds / 60)
           .catch(() =>
-            fetch("https://tdas-api.hkemobility.gov.hk/tdas/api/route", {
+            safeFetch("https://tdas-api.hkemobility.gov.hk/tdas/api/route", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -177,7 +171,7 @@ export async function fetchEstJourneyTime({
                 return 4;
               })
               .then((s) => {
-                __HK_BUS_ETA_JT_CACHE__[key] = { s: s * 1.1, ts };
+                __HK_BUS_ETA_JT_CACHE__.set(key, { s: s * 1.1, ts });
                 // margin for car accelerating, decelerating, and passenger picking up and dropping off
                 return s * 1.1;
               }),
@@ -189,11 +183,9 @@ export async function fetchEstJourneyTime({
     });
     payloads.length = 0;
   }
-  for (const k in __HK_BUS_ETA_JT_CACHE__) {
-    // clean up cache
-    if (__HK_BUS_ETA_JT_CACHE__[k].ts + 15 * 60 * 1000 < ts) {
-      delete __HK_BUS_ETA_JT_CACHE__[k];
-    }
+  // clean up cache
+  for (const [k, v] of __HK_BUS_ETA_JT_CACHE__) {
+    if (v.ts + 15 * 60 * 1000 < ts) __HK_BUS_ETA_JT_CACHE__.delete(k);
   }
   return ret;
 }

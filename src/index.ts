@@ -1,3 +1,4 @@
+import { safeFetch, enc } from "./utils";
 import kmb from "./kmb";
 import ctb from "./ctb";
 import nlb from "./nlb";
@@ -146,25 +147,35 @@ export async function fetchEtas({
   }
 }
 
+// minimal shape check so a bad payload triggers the fallback instead of crashing consumers
+const assertEtaDb = (db: any): EtaDb => {
+  if (!db || typeof db.routeList !== "object" || typeof db.stopList !== "object")
+    throw new Error("invalid EtaDb");
+  return db;
+};
+
 export async function fetchEtaDb(): Promise<EtaDb> {
-  return fetch("https://data.hkbus.app/routeFareList.min.json", {
+  return safeFetch("https://data.hkbus.app/routeFareList.min.json", {
     cache: "no-store",
   })
     .then((r) => r.json())
+    .then(assertEtaDb)
     .catch(() =>
-      fetch("https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json", {
+      safeFetch("https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json", {
         cache: "no-store",
-      }).then((r) => r.json()),
+      })
+        .then((r) => r.json())
+        .then(assertEtaDb),
     );
 }
 
 export async function fetchEtaDbMd5(): Promise<string> {
-  return fetch("https://data.hkbus.app/routeFareList.md5", {
+  return safeFetch("https://data.hkbus.app/routeFareList.md5", {
     cache: "no-store",
   })
     .then((r) => r.text())
     .catch(() =>
-      fetch("https://hkbus.github.io/hk-bus-crawling/routeFareList.md5", {
+      safeFetch("https://hkbus.github.io/hk-bus-crawling/routeFareList.md5", {
         cache: "no-store",
       }).then((r) => r.text()),
     );
@@ -175,8 +186,8 @@ export async function fetchRouteUpdatedAt(
 ): Promise<number> {
   const filename =
     `${route.route}+${route.serviceType}+${route.orig.en}+${route.dest.en}`.toUpperCase();
-  return fetch(
-    `https://data.hkbus.app/route-ts/${filename.replace(/[\\\/\:\*\?\"\<\>\|\]\']/g, "")}`,
+  return safeFetch(
+    `https://data.hkbus.app/route-ts/${enc(filename)}`,
   )
     .then((r) => {
       if (r.ok) {

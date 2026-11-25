@@ -1,5 +1,5 @@
 import type { Eta, RouteListEntry, StopList } from "./type";
-import { isSafari } from "./utils";
+import { isSafari, safeFetch, enc } from "./utils";
 
 interface fetchEtasProps {
   route: RouteListEntry["route"];
@@ -14,15 +14,15 @@ export default function fetchEtas({
   bound,
   stopList,
 }: fetchEtasProps): Promise<Eta[]> {
-  return fetch(
-    `https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line=${route}&sta=${stopId}`,
+  return safeFetch(
+    `https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line=${enc(route)}&sta=${enc(stopId)}`,
     {
       cache: isSafari ? "default" : "no-store",
     },
   )
     .catch(() => (
-      fetch(
-        `https://mtr.hkbus.app/?line=${route}&sta=${stopId}`,
+      safeFetch(
+        `https://mtr.hkbus.app/?line=${enc(route)}&sta=${enc(stopId)}`,
         {
           cache: isSafari ? "default" : "no-store",
         },  

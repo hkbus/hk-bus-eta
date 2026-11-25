@@ -86,3 +86,23 @@ export const getUpcomingFerry = ({
     }, [] as string[]);
   return ([...new Set(ret)] as string[]).sort((a, b) => (a < b ? -1 : 1));
 };
+
+// fetch with a timeout and a non-2xx check, so hung/failed upstreams reject (and fall back) instead of stalling
+export const safeFetch = (
+  url: string,
+  init: RequestInit = {},
+  timeoutMs = 10000,
+): Promise<Response> => {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  if (init.signal?.aborted) ctrl.abort();
+  else init.signal?.addEventListener("abort", () => ctrl.abort());
+  return fetch(url, { ...init, signal: ctrl.signal })
+    .then((r) => {
+      if (r.ok === false) throw new Error(`HTTP ${r.status}`);
+      return r;
+    })
+    .finally(() => clearTimeout(timer));
+};
+
+export const enc = encodeURIComponent;

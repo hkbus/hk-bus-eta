@@ -1,5 +1,5 @@
 import type { Eta, RouteListEntry } from "./type";
-import { isSafari } from "./utils";
+import { isSafari, safeFetch, enc } from "./utils";
 
 interface fetchEtasProps {
   stopId: string;
@@ -12,8 +12,8 @@ export default function fetchEtas({
   nlbId,
   language,
 }: fetchEtasProps): Promise<Eta[]> {
-  return fetch(
-    `https://rt.data.gov.hk/v2/transport/nlb/stop.php?action=estimatedArrivals&routeId=${nlbId}&stopId=${stopId}&language=${language}`,
+  return safeFetch(
+    `https://rt.data.gov.hk/v2/transport/nlb/stop.php?action=estimatedArrivals&routeId=${enc(String(nlbId))}&stopId=${enc(stopId)}&language=${enc(language)}`,
     {
       cache: isSafari ? "default" : "no-store",
     },

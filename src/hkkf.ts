@@ -1,5 +1,5 @@
 import type { Eta, EtaDb, RouteListEntry } from "./type";
-import { getUpcomingFerry, isSafari } from "./utils";
+import { getUpcomingFerry, isSafari, safeFetch, enc } from "./utils";
 
 interface fetchEtasProps {
   route: RouteListEntry["route"];
@@ -37,8 +37,8 @@ export default function fetchEtas({
         }))
     );
   } else if (seq === 1) {
-    return fetch(
-      `https://www.hkkfeta.com/opendata/eta/${route.slice(2)}/${bound === "I" ? "inbound" : "outbound"}`,
+    return safeFetch(
+      `https://www.hkkfeta.com/opendata/eta/${enc(route.slice(2))}/${bound === "I" ? "inbound" : "outbound"}`,
       {
         cache: isSafari ? "default" : "no-store",
       }
