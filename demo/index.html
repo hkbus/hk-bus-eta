@@ -1,0 +1,162 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>hk-bus-eta demo</title>
+<style>
+  :root {
+    --bg: #f5f6f8; --card: #fff; --text: #1c1f24; --muted: #6b7280;
+    --line: #dfe3e8; --accent: #d9230f; --accent-text: #fff; --chip: #eef0f3;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #12141a; --card: #1b1e26; --text: #e8eaee; --muted: #9aa1ad;
+      --line: #2c313c; --accent: #ff5a47; --accent-text: #12141a; --chip: #262b35;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 system-ui, sans-serif; }
+  main { max-width: 44rem; margin: 0 auto; padding: 2rem 16px 3rem; }
+  h1 { margin: 0 0 .25rem; font-size: 1.5rem; }
+  .sub { margin: 0 0 1.5rem; color: var(--muted); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 1rem; margin-bottom: 1rem; }
+
+  /* fixed grid so controls never resize with their content */
+  .form { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+  .field { display: flex; flex-direction: column; gap: .25rem; min-width: 0; }
+  .field.wide { grid-column: 1 / -1; }
+  label { font-size: .8rem; color: var(--muted); }
+  input, select, button {
+    width: 100%; min-width: 0; height: 2.5rem; padding: 0 .75rem; font: inherit; color: var(--text);
+    background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+  }
+  select { text-overflow: ellipsis; }
+  input:focus, select:focus, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  button { cursor: pointer; background: var(--accent); color: var(--accent-text); border-color: transparent; font-weight: 600; }
+  button:disabled, select:disabled { opacity: .5; cursor: not-allowed; }
+  button.ghost { background: var(--card); color: var(--text); border-color: var(--line); }
+
+  #status { min-height: 1.5rem; margin: 0 0 .75rem; color: var(--muted); }
+  #status.err { color: var(--accent); }
+  #results { min-height: 4rem; display: grid; gap: .5rem; }
+  .eta { display: grid; grid-template-columns: 5rem 1fr; gap: .75rem; align-items: center;
+         padding: .75rem; border: 1px solid var(--line); border-radius: 10px; background: var(--card); }
+  .mins { font-size: 1.4rem; font-weight: 700; font-variant-numeric: tabular-nums; text-align: center; }
+  .mins small { display: block; font-size: .7rem; font-weight: 400; color: var(--muted); }
+  .meta { min-width: 0; overflow-wrap: anywhere; }
+  .chip { display: inline-block; padding: 0 .5rem; border-radius: 999px; background: var(--chip); font-size: .75rem; color: var(--muted); margin-right: .25rem; }
+  details { margin-top: .5rem; }
+  summary { cursor: pointer; color: var(--muted); }
+  pre { margin: .5rem 0 0; padding: .75rem; max-height: 16rem; overflow: auto; background: var(--chip); border-radius: 8px; font-size: .8rem; }
+  @media (max-width: 30rem) { .form { grid-template-columns: 1fr; } }
+</style>
+<main>
+  <h1>hk-bus-eta demo</h1>
+  <p class="sub">Look up live arrival times with the package, built from <code>src/</code>.</p>
+
+  <section class="card form">
+    <div class="field">
+      <label for="route">Route number</label>
+      <input id="route" value="1" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="field">
+      <label for="lang">Language</label>
+      <select id="lang"><option value="en">English</option><option value="zh">中文</option></select>
+    </div>
+    <div class="field wide">
+      <label for="routes">Route</label>
+      <select id="routes" disabled><option>Search a route first</option></select>
+    </div>
+    <div class="field wide">
+      <label for="stops">Stop</label>
+      <select id="stops" disabled><option>Pick a route first</option></select>
+    </div>
+    <div class="field"><button id="find" class="ghost" disabled>Find routes</button></div>
+    <div class="field"><button id="eta" disabled>Get ETA</button></div>
+  </section>
+
+  <p id="status" role="status">Loading route database…</p>
+  <section id="results" aria-live="polite"></section>
+  <details id="rawBox" hidden><summary>Raw JSON</summary><pre id="raw"></pre></details>
+</main>
+
+<script type="module">
+  import { fetchEtaDb, fetchEtas } from "./eta.js";
+  const $ = (id) => document.getElementById(id);
+  // textContent only: upstream strings are untrusted
+  const el = (tag, cls, text) => Object.assign(document.createElement(tag), { className: cls ?? "", textContent: text ?? "" });
+  const opt = (v, t) => Object.assign(document.createElement("option"), { value: v, textContent: t });
+  const status = (msg, err) => { $("status").textContent = msg; $("status").className = err ? "err" : ""; };
+  const lang = () => $("lang").value;
+
+  let db;
+  const current = () => db?.routeList[$("routes").value];
+
+  function setEnabled(on) { $("find").disabled = $("eta").disabled = !on; }
+
+  function fillRoutes() {
+    const hits = Object.entries(db.routeList).filter(([, r]) => r.route === $("route").value.trim().toUpperCase());
+    $("routes").replaceChildren(...(hits.length
+      ? hits.map(([k, r]) => opt(k, `${r.co.join("+").toUpperCase()}  ${r.orig[lang()]} → ${r.dest[lang()]}`))
+      : [opt("", "No match")]));
+    $("routes").disabled = !hits.length;
+    status(hits.length ? `${hits.length} route(s) found` : "No route matches that number", !hits.length);
+    fillStops();
+  }
+
+  function fillStops() {
+    const r = current();
+    $("stops").disabled = !r;
+    $("stops").replaceChildren(...(r
+      ? Object.values(r.stops)[0].map((id, i) => opt(i, `${i + 1}. ${db.stopList[id]?.name[lang()] ?? id}`))
+      : [opt("", "Pick a route first")]));
+    $("eta").disabled = !r;
+  }
+
+  function render(etas) {
+    $("results").replaceChildren(...(etas.length ? etas : [null]).map((e) => {
+      if (!e) return el("p", "", "No upcoming arrivals.");
+      const diff = e.eta ? Math.round((new Date(e.eta) - Date.now()) / 60000) : null;
+      const row = el("div", "eta");
+      const mins = el("div", "mins", diff === null ? "–" : diff <= 0 ? "Now" : String(diff));
+      if (diff > 0) mins.append(el("small", "", "min"));
+      const meta = el("div", "meta");
+      meta.append(el("span", "chip", e.co.toUpperCase()), el("span", "", e.eta ? new Date(e.eta).toLocaleTimeString("en-HK", { hour12: false }) : ""));
+      const note = [e.dest[lang()], e.remark[lang()]].filter(Boolean).join(" · ");
+      if (note) meta.append(el("div", "", note));
+      row.append(mins, meta);
+      return row;
+    }));
+    $("raw").textContent = JSON.stringify(etas, null, 2);
+    $("rawBox").hidden = false;
+  }
+
+  $("find").onclick = fillRoutes;
+  $("route").addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !$("find").disabled) fillRoutes();
+  });
+  $("routes").onchange = fillStops;
+  $("lang").onchange = () => db && (fillRoutes(), $("results").replaceChildren());
+  $("eta").onclick = async () => {
+    const r = current();
+    if (!r) return;
+    $("eta").disabled = true;
+    status("Fetching…");
+    try {
+      render(await fetchEtas({ ...r, seq: +$("stops").value, language: lang(), stopList: db.stopList, holidays: db.holidays, serviceDayMap: db.serviceDayMap }));
+      status("Updated " + new Date().toLocaleTimeString("en-HK", { hour12: false }));
+    } catch (e) {
+      status("Failed: " + e, true);
+    } finally {
+      $("eta").disabled = false;
+    }
+  };
+
+  try {
+    db = await fetchEtaDb();
+    setEnabled(true);
+    $("eta").disabled = true;
+    status(`Database loaded: ${Object.keys(db.routeList).length} routes. Enter a route and click Find.`);
+  } catch (e) {
+    status("Database load failed: " + e, true);
+  }
+</script>

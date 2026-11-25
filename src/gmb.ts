@@ -1,5 +1,5 @@
 import type { Eta, RouteListEntry } from "./type";
-import { isSafari } from "./utils";
+import { isSafari, safeFetch, enc } from "./utils";
 
 interface fetchEtasProps {
   gtfsId: RouteListEntry["gtfsId"];
@@ -14,8 +14,8 @@ export default function fetchEtas({
   bound,
   seq,
 }: fetchEtasProps): Promise<Eta[]> {
-  return fetch(
-    `https://data.etagmb.gov.hk/eta/route-stop/${gtfsId}/${stopId}`,
+  return safeFetch(
+    `https://data.etagmb.gov.hk/eta/route-stop/${enc(String(gtfsId))}/${enc(stopId)}`,
     {
       cache: isSafari ? "default" : "no-store",
     },

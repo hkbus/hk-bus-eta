@@ -1,4 +1,4 @@
-import { isSafari } from "./utils";
+import { isSafari, safeFetch, enc } from "./utils";
 import type { Eta, RouteListEntry } from "./type";
 
 interface fetchEtasProps {
@@ -14,8 +14,8 @@ export default function fetchEtas({
   bound,
   seq,
 }: fetchEtasProps): Promise<Eta[]> {
-  return fetch(
-    `https://rt.data.gov.hk//v2/transport/citybus/eta/CTB/${stopId}/${route}`,
+  return safeFetch(
+    `https://rt.data.gov.hk//v2/transport/citybus/eta/CTB/${enc(stopId)}/${enc(route)}`,
     {
       cache: isSafari ? "default" : "no-store",
     },

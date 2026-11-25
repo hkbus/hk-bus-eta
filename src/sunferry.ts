@@ -10,7 +10,7 @@ import {
   sub,
 } from "date-fns";
 import type { Eta, EtaDb, Freq, RouteListEntry } from "./type";
-import { getUpcomingFerry, isSafari } from "./utils";
+import { getUpcomingFerry, isSafari, safeFetch, enc } from "./utils";
 
 interface fetchEtasProps {
   freq: RouteListEntry["freq"];
@@ -31,8 +31,8 @@ export default async function fetchEtas({
     return Promise.resolve([]);
   }
 
-  const apiEtas = await fetch(
-    `https://www.sunferry.com.hk/eta/?route=${route}`,
+  const apiEtas = await safeFetch(
+    `https://www.sunferry.com.hk/eta/?route=${enc(route)}`,
     {
       cache: isSafari ? "default" : "no-store",
     }
